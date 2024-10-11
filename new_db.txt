@@ -1,0 +1,45 @@
+# This table will be used to hold the product information for price history tracking 
+price_track_products:
+  id: number
+  product_name: strirng
+  site: strirng
+  site_url: string
+
+# This table will be used to track historical price values for wishlisted products
+price_track_data:
+  product_id: number(proce_track_product.id | product_postings)
+  date: date
+  price: number
+  currency: string
+  product_type: string(online | product_postings)
+
+# This table will be used to hold details of users
+users:
+  id: number
+  username: string
+  email: string
+  first_name: string
+  last_name: string
+  hashed_password: string
+
+# This table will hold data of products that the users can post
+product_postings:
+  id: number
+  name: string
+  posted_by: number(users.id)
+  date_posted: date
+  description: string
+  price: number
+  currency: string
+  sold: boolean
+  (gotta handle images as well)
+
+
+wishlist:
+  id: number
+  user_id: number(users.id)
+  product_id: number(price_track_products.id | product_postings.id)
+  product_type: string(online | product_postings)
+  date_added: date
+
+
