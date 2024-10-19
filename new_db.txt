@@ -2,8 +2,8 @@
 price_track_products:
   id: number
   product_name: strirng
-  site: strirng
-  site_url: string
+  site: string
+  product_url: string
 
 # This table will be used to track historical price values for wishlisted products
 price_track_data:
