@@ -4,9 +4,10 @@ from database.database import engine, db_session
 from util.hashing import get_hashed_password, verify_password
 from sqlalchemy.orm import Session
 import database.models as models
+from flask_cors import CORS
 
 app = Flask(__name__)
-
+CORS(app)
 # app.config.from_pyfile("settings.py")
 
 
