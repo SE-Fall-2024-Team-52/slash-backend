@@ -1,5 +1,7 @@
 from fastapi import Depends
 from flask import Flask, request, jsonify
+from flask_mail import Mail, Message
+
 from database.database import engine, db_session
 from util.hashing import get_hashed_password, verify_password
 from sqlalchemy.orm import Session
@@ -9,16 +11,49 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 import requests
 import re
+from apscheduler.schedulers.background import BackgroundScheduler
+import atexit
 
 app = Flask(__name__)
 CORS(app)
 # app.config.from_pyfile("settings.py")
 
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = 'myprojectstesting2000@gmail.com'
+app.config['MAIL_PASSWORD'] = 'Testing@Projects@TempEmail'
+app.config['MAIL_DEFAULT_SENDER'] = 'myprojectstesting2000@gmail.com'
 
-@app.route("/", methods=["GET", "POST"])
-def hello():
-    return get_hashed_password("password", "username")
+mail = Mail(app)
 
+BASE_URL = "http://localhost:5000"
+
+def schedule_price_drop_alert():
+    try:
+        users = (
+            db_session.query(models.Users)
+        )
+        for user in users:
+            payload = {
+                "username": user.username
+            }
+            r = requests.post(f"{BASE_URL}/api/price-drop-alert", json=payload)
+            print(r.text)
+    except Exception as e:
+        print(f"Error sending price drop alert: {e}")
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=schedule_price_drop_alert, trigger="interval", seconds=180)
+scheduler.start()
+
+# Shut down the scheduler when exiting the app
+atexit.register(lambda: scheduler.shutdown())
+
+@app.route('/')
+def index():
+    return "Scheduler is running!"
 
 @app.route("/postings/<username>", methods=["GET"])
 def get_postings(username):
@@ -251,7 +286,7 @@ def add_to_wishlist():
             product_name=item.get("title"),
             product_url=item.get("link"),
             site=item.get("website"),
-            price=float(re.sub("[^0-9]", "", item.get("price")[1:])),
+            price=float(re.sub(r"[^0-9.]", "", item.get("price")[1:])),
             currency=item.get("price"),
             img_url=item.get("img_link"),
         )
@@ -354,6 +389,58 @@ def add_posting():
         }
     )
 
+@app.route('/send-email/<email>')
+def send_email(email,content):
+    print("Sending Email for user: ",email)
+    msg = Message("Price drop alert",
+                  recipients=[email])
+    msg.body = content
+    print("Email msg: ",msg.body)
+    try:
+        mail.send(msg)
+        print("Email sent: ", msg)
+        return f"Email sent to {email}!"
+    except Exception as e:
+        print(str(e))
+        return str(e)
+
+
+@app.route("/api/price-drop-alert", methods=["POST"])
+def send_price_drop_alert():
+    username = request.json.get("username")
+    user = (
+        db_session.query(models.Users).filter(models.Users.username == username).first()
+    )
+    # print("Hello user: ", user.id)
+    existing_wishlist = (
+        db_session.query(models.Wishlist)
+        .filter(models.Wishlist.user_id==user.id)
+        .first()
+    )
+    alert_items = []
+    if existing_wishlist:
+        linked_products = (
+            db_session.query(models.PriceTrackProducts)
+            .filter(models.PriceTrackProducts.id == existing_wishlist.product_id)
+        )
+        for product in linked_products:
+            # print("Product name: ",product.product_name)
+            saved_price = product.price
+            # print("Product price: ", saved_price)
+            current_results = scrape_ebay(product.product_name)
+            # print("Current res: ", current_results)
+            for item in current_results:
+                curr_price = extract_price(item.get('price'))
+                if curr_price is not None:
+                    if curr_price<saved_price:
+                        # print("Current price: ",curr_price)
+                        item["price"]=str(curr_price)
+                        alert_items.append(item)
+
+        print("total alert items: ",len(alert_items))
+
+    send_email(user.email,alert_items)
+    return jsonify({"message": "User alerted about price drop successfully! "}), 200
 
 @app.route("/login", methods=["POST"])
 def login():
