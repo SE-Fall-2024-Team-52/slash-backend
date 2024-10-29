@@ -14,8 +14,6 @@ app = Flask(__name__)
 CORS(app)
 # app.config.from_pyfile("settings.py")
 
-wishlist = []
-
 
 @app.route("/", methods=["GET", "POST"])
 def hello():
@@ -238,13 +236,85 @@ def scrape_bestbuy(item_name):
 
 @app.route("/api/wishlist", methods=["POST"])
 def add_to_wishlist():
-    item = request.json
-    wishlist.append(item)
+    item = request.json.get("item")
+    username = request.json.get("username")
+    existing_item = (
+        db_session.query(models.PriceTrackProducts)
+        .filter(models.PriceTrackProducts.product_url == item.get("link"))
+        .first()
+    )
+    user = (
+        db_session.query(models.Users).filter(models.Users.username == username).first()
+    )
+    if not existing_item:
+        existing_item = models.PriceTrackProducts(
+            product_name=item.get("title"),
+            product_url=item.get("link"),
+            site=item.get("website"),
+            price=float(re.sub("[^0-9]", "", item.get("price")[1:])),
+            currency=item.get("price"),
+            img_url=item.get("img_link"),
+        )
+        db_session.add(existing_item)
+        db_session.commit()
+        db_session.refresh(existing_item)
+    wishlist_item = models.Wishlist(
+        product_id=existing_item.id,
+        user_id=user.id,
+        product_type="online",
+        date_added=datetime.now().strftime("%Y-%m-%d"),
+    )
+    db_session.add(wishlist_item)
+    db_session.commit()
     return jsonify({"message": "Item added to wishlist successfully! "}), 200
 
 
-@app.route("/api/wishlist", methods=["GET"])
-def get_wishlist():
+@app.route("/api/wishlist/<product_id>", methods=["DELETE"])
+def remove_from_wishlist(product_id):
+
+    existing_item = (
+        db_session.query(models.Wishlist)
+        .filter(models.Wishlist.id == product_id)
+        .first()
+    )
+    if not existing_item:
+        return jsonify({"message": "Item not found in wishlist"}), 404
+    db_session.delete(existing_item)
+    db_session.commit()
+    return jsonify({"message": "Item removed from wishlist successfully! "}), 200
+
+
+@app.route("/api/wishlist/<username>", methods=["GET"])
+def get_wishlist(username):
+    user = (
+        db_session.query(models.Users).filter(models.Users.username == username).first()
+    )
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+    wishlist_objects = (
+        db_session.query(models.Wishlist)
+        .filter(models.Wishlist.user_id == user.id)
+        .all()
+    )
+    wishlist = []
+    for w in wishlist_objects:
+        print(w.product_id)
+        product = (
+            db_session.query(models.PriceTrackProducts)
+            .filter(models.PriceTrackProducts.id == w.product_id)
+            .first()
+        )
+        wishlist.append(
+            {
+                "id": w.id,
+                "user_id": w.user_id,
+                "title": product.product_name,
+                "price": product.price,
+                "link": product.product_url,
+                "website": product.site,
+                "img_link": product.img_url,
+            }
+        )
     return jsonify(wishlist), 200
 
 

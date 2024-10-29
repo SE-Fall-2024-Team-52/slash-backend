@@ -22,6 +22,9 @@ class PriceTrackProducts(Base):
     product_name = Column(String, index=True)
     product_url = Column(String, index=True)
     site = Column(String)
+    price = Column(Integer)
+    currency = Column(String)
+    img_url = Column(String)
 
 
 class PriceTrackData(Base):
@@ -30,8 +33,8 @@ class PriceTrackData(Base):
     id = Column(Integer, primary_key=True, index=True)
     product_id = Column(Integer, ForeignKey("price_track_products.id"))
     price = Column(Integer)
-    date = Column(String)
     currency = Column(String)
+    date = Column(String)
     product_type = Column(String)
 
 
