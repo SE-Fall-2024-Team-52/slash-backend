@@ -18,31 +18,29 @@ app = Flask(__name__)
 CORS(app)
 # app.config.from_pyfile("settings.py")
 
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_USERNAME'] = 'myprojectstesting2000@gmail.com'
-app.config['MAIL_PASSWORD'] = 'Testing@Projects@TempEmail'
-app.config['MAIL_DEFAULT_SENDER'] = 'myprojectstesting2000@gmail.com'
+app.config["MAIL_SERVER"] = "smtp.gmail.com"
+app.config["MAIL_PORT"] = 587
+app.config["MAIL_USE_TLS"] = True
+app.config["MAIL_USE_SSL"] = False
+app.config["MAIL_USERNAME"] = "myprojectstesting2000@gmail.com"
+app.config["MAIL_PASSWORD"] = "Testing@Projects@TempEmail"
+app.config["MAIL_DEFAULT_SENDER"] = "myprojectstesting2000@gmail.com"
 
 mail = Mail(app)
 
 BASE_URL = "http://localhost:5000"
 
+
 def schedule_price_drop_alert():
     try:
-        users = (
-            db_session.query(models.Users)
-        )
+        users = db_session.query(models.Users)
         for user in users:
-            payload = {
-                "username": user.username
-            }
+            payload = {"username": user.username}
             r = requests.post(f"{BASE_URL}/api/price-drop-alert", json=payload)
             print(r.text)
     except Exception as e:
         print(f"Error sending price drop alert: {e}")
+
 
 scheduler = BackgroundScheduler()
 scheduler.add_job(func=schedule_price_drop_alert, trigger="interval", seconds=180)
@@ -51,9 +49,11 @@ scheduler.start()
 # Shut down the scheduler when exiting the app
 atexit.register(lambda: scheduler.shutdown())
 
-@app.route('/')
+
+@app.route("/")
 def index():
     return "Scheduler is running!"
+
 
 @app.route("/postings/<username>", methods=["GET"])
 def get_postings(username):
@@ -389,13 +389,13 @@ def add_posting():
         }
     )
 
-@app.route('/send-email/<email>')
-def send_email(email,content):
-    print("Sending Email for user: ",email)
-    msg = Message("Price drop alert",
-                  recipients=[email])
+
+@app.route("/send-email/<email>")
+def send_email(email, content):
+    print("Sending Email for user: ", email)
+    msg = Message("Price drop alert", recipients=[email])
     msg.body = content
-    print("Email msg: ",msg.body)
+    print("Email msg: ", msg.body)
     try:
         mail.send(msg)
         print("Email sent: ", msg)
@@ -414,14 +414,13 @@ def send_price_drop_alert():
     # print("Hello user: ", user.id)
     existing_wishlist = (
         db_session.query(models.Wishlist)
-        .filter(models.Wishlist.user_id==user.id)
+        .filter(models.Wishlist.user_id == user.id)
         .first()
     )
     alert_items = []
     if existing_wishlist:
-        linked_products = (
-            db_session.query(models.PriceTrackProducts)
-            .filter(models.PriceTrackProducts.id == existing_wishlist.product_id)
+        linked_products = db_session.query(models.PriceTrackProducts).filter(
+            models.PriceTrackProducts.id == existing_wishlist.product_id
         )
         for product in linked_products:
             # print("Product name: ",product.product_name)
@@ -430,17 +429,18 @@ def send_price_drop_alert():
             current_results = scrape_ebay(product.product_name)
             # print("Current res: ", current_results)
             for item in current_results:
-                curr_price = extract_price(item.get('price'))
+                curr_price = extract_price(item.get("price"))
                 if curr_price is not None:
-                    if curr_price<saved_price:
+                    if curr_price < saved_price:
                         # print("Current price: ",curr_price)
-                        item["price"]=str(curr_price)
+                        item["price"] = str(curr_price)
                         alert_items.append(item)
 
-        print("total alert items: ",len(alert_items))
+        print("total alert items: ", len(alert_items))
 
-    send_email(user.email,alert_items)
+    send_email(user.email, alert_items)
     return jsonify({"message": "User alerted about price drop successfully! "}), 200
+
 
 @app.route("/login", methods=["POST"])
 def login():
