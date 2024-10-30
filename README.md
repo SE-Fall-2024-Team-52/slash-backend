@@ -1,6 +1,1 @@
-# Setup
-
-Install dependencies using `pip install -U -r requirements.txt`
-Run the backend server using `flask run` in the root directory
-
-The new database schema to be created is in the `new_db.txt` file
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10211531.svg)](https://doi.org/10.5281/zenodo.14014887)
