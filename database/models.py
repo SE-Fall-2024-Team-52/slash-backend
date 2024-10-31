@@ -4,6 +4,18 @@ from sqlalchemy.ext.declarative import declarative_base
 from database.database import Base
 
 
+"""
+Represents a user in the system.
+Attributes:
+    id (int): The primary key of the user.
+    email (str): The unique email address of the user.
+    username (str): The unique username of the user.
+    first_name (str): The first name of the user.
+    last_name (str): The last name of the user.
+    hashed_password (str): The hashed password of the user.
+"""
+
+
 class Users(Base):
     __tablename__ = "users"
 
@@ -13,6 +25,20 @@ class Users(Base):
     first_name = Column(String)
     last_name = Column(String)
     hashed_password = Column(String)
+
+
+"""
+Represents a product being tracked for price changes.
+
+Attributes:
+    id (int): The primary key of the product.
+    product_name (str): The name of the product.
+    product_url (str): The URL of the product.
+    site (str): The site where the product is listed.
+    price (int): The current price of the product.
+    currency (str): The currency of the product price.
+    img_url (str): The URL of the product image.
+"""
 
 
 class PriceTrackProducts(Base):
@@ -38,6 +64,21 @@ class PriceTrackData(Base):
     product_type = Column(String)
 
 
+"""
+Represents a product posting by a seller.
+
+Attributes:
+    id (int): The primary key of the product posting.
+    name (str): The name of the product.
+    posted_by (int): The ID of the user who posted the product.
+    date_posted (str): The date when the product was posted.
+    description (str): The description of the product.
+    price (int): The price of the product.
+    currency (str): The currency of the product price.
+    sold (bool): Indicates whether the product has been sold.
+"""
+
+
 class ProductPostings(Base):
     __tablename__ = "product_postings"
 
@@ -49,6 +90,18 @@ class ProductPostings(Base):
     price = Column(Integer)
     currency = Column(String)
     sold = Column(Boolean)
+
+
+"""
+Represents an item added to the wishlist by a user.
+
+Attributes:
+    id (int): The primary key of the wishlist item.
+    user_id (int): The ID of the user who added the item to the wishlist.
+    product_id (int): The ID of the product added to the wishlist.
+    product_type (str): The type of the product added to the wishlist.
+    date_added (str): The date when the product was added to the wishlist.
+"""
 
 
 class Wishlist(Base):

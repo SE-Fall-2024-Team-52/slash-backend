@@ -1,11 +1,12 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
-
+from dotenv import load_dotenv
+import os
 
 # postgres connection
-username = "postgres"
-password = "admin"
+username = os.getenv("DB_USERNAME")
+password = os.getenv("DB_PASSWORD")
 SQLALCHEMY_DATABASE_URL = (
     "postgresql://" + username + ":" + password + "@localhost/slash"
 )
