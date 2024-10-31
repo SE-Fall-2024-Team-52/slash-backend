@@ -5,31 +5,31 @@ app = Flask(__name__)
 CORS(app)
 # app.config.from_pyfile("settings.py")
 
-# config.py
-MAIL_SERVER = 'smtp.gmail.com'
-MAIL_PORT = 587
-MAIL_USE_TLS = True
-MAIL_USE_SSL = False
-MAIL_USERNAME = 'myprojectstesting2000@gmail.com'
-MAIL_PASSWORD = 'Testing@Projects@TempEmail'
-MAIL_DEFAULT_SENDER = 'myprojectstesting2000@gmail.com'
+# Mail configuration
+app.config['MAIL_SERVER'] = MAIL_SERVER
+app.config['MAIL_PORT'] = MAIL_PORT
+app.config['MAIL_USE_TLS'] = MAIL_USE_TLS
+app.config['MAIL_USE_SSL'] = MAIL_USE_SSL
+app.config['MAIL_USERNAME'] = MAIL_USERNAME
+app.config['MAIL_PASSWORD'] = MAIL_PASSWORD
+app.config['MAIL_DEFAULT_SENDER'] = MAIL_DEFAULT_SENDER
 
 mail = Mail(app)
-
 BASE_URL = "http://localhost:5000"
 
-
 def schedule_price_drop_alert():
+    """Schedules price drop alerts for users."""
     try:
-        users = db_session.query(models.Users)
+        users = db_session.query(models.Users).all()
         for user in users:
             payload = {"username": user.username}
-            r = requests.post(f"{BASE_URL}/api/price-drop-alert", json=payload)
-            print(r.text)
+            response = requests.post(f"{BASE_URL}/api/price-drop-alert", json=payload)
+            print(response.text)
     except Exception as e:
         print(f"Error sending price drop alert: {e}")
 
 
+# Scheduler for price drop alerts
 scheduler = BackgroundScheduler()
 scheduler.add_job(func=schedule_price_drop_alert, trigger="interval", seconds=180)
 scheduler.start()
@@ -133,24 +133,12 @@ def search_items_API():
 
 
 def scrape_walmart(item_name: str) -> list[dict]:
-    # Example Walmart scraping logic
-    # Note: You should replace the URL and parsing logic with the actual website structure
+    """Scrapes Walmart for item details."""
     url = f"https://www.walmart.com/search/?q={item_name}"
     response = requests.get(url)
-    print("response: ", response)
     soup = BeautifulSoup(response.text, "html.parser")
-    items = []
-
-    # for product in soup.select('.search-result-gridview-item'):
-    #     title = product.select_one('.product-title').get_text(strip=True)
-    #     price = product.select_one('.price').get_text(strip=True)
-    #     link = product.select_one('.product-title a')['href']
-    #     img_link = product.select_one('img')['src']
-    #     items.append({'title': title, 'price': price, 'link': link, 'website': 'Walmart', 'img_link': img_link})
-
-    # return items
     results = []
-    print("Soup: ", soup)
+
     for item in soup.select("div.data-item-id"):
         title = item.select_one("div.span.lh-title")
         price = item.select_one("div.lh-copy")
@@ -162,48 +150,39 @@ def scrape_walmart(item_name: str) -> list[dict]:
                     "title": title.get_text(strip=True),
                     "price": price.get_text(strip=True),
                     "link": link["href"],
-                    "website": "eBay",
+                    "website": "Walmart",
                 }
             )
-    print("items from walmart: ", results)
     return results
 
 
 def scrape_target(item_name):
+    """Scrapes Target for item details."""
     url = f"https://www.target.com/s?searchTerm={item_name}"
     response = requests.get(url)
     soup = BeautifulSoup(response.text, "html.parser")
     results = []
 
-    products = soup.select(
-        'div[data-test="product-grid"] section[class^="styles__StyledRowWrapper"] div[class^="styles__StyledCardWrapper"]'
-    )
-    print("products: ", products)
+    products = soup.select('div[data-test="product-grid"] section[class^="styles__StyledRowWrapper"] div[class^="styles__StyledCardWrapper"]')
     for item in products:
-        title = item.select_one(
-            'div[data-test="product-details"] a[data-test="product-title"]'
-        )
-        price = item.select_one(
-            'div[data-test="product-details"] span[data-test="current-price"]'
-        )
-        link = item.select_one(
-            'div[data-test="product-details"] a[data-test="product-title"]'
-        )
+        title = item.select_one('div[data-test="product-details"] a[data-test="product-title"]')
+        price = item.select_one('div[data-test="product-details"] span[data-test="current-price"]')
+        link = item.select_one('div[data-test="product-details"] a[data-test="product-title"]')
 
         if title and price and link:
             results.append(
                 {
-                    "title": title.text.strip() if title else None,
-                    "price": price.text.strip() if price else None,
+                    "title": title.text.strip(),
+                    "price": price.text.strip(),
                     "link": "https://www.target.com" + link["href"],
                     "website": "Target",
                 }
             )
-    print("res from target: ", results)
     return results
 
 
 def scrape_ebay(item_name):
+    """Scrapes eBay for item details."""
     url = f"https://www.ebay.com/sch/i.html?_nkw={item_name}"
     response = requests.get(url)
     soup = BeautifulSoup(response.content, "html.parser")
@@ -215,27 +194,26 @@ def scrape_ebay(item_name):
         link = item.select_one(".s-item__link")
         image_tag = item.select_one("img")
         if title and price and link:
-            print("title", title)
             if title.get_text(strip=True) != "Shop on eBay":
                 results.append(
                     {
                         "title": title.get_text(strip=True),
                         "price": price.get_text(strip=True),
                         "link": link["href"],
-                        "img_link": image_tag["src"],
+                        "img_link": image_tag["src"] if image_tag else None,
                         "website": "eBay",
                     }
                 )
-    print("result from Ebay: ", results)
     return results
 
 
 def scrape_bestbuy(item_name):
+    """Scrapes Best Buy for item details."""
     url = f"https://www.bestbuy.com/site/searchpage.jsp?str={item_name}"
     response = requests.get(url)
     soup = BeautifulSoup(response.content, "html.parser")
     results = []
-    print("Soup: ", soup)
+
     for item in soup.select(".sku-item"):
         title = item.select_one("h4.sku-title a")
         price = item.select_one("div.priceView-customer-price span")
@@ -248,12 +226,10 @@ def scrape_bestbuy(item_name):
                     "title": title.get_text(strip=True),
                     "price": price.get_text(strip=True),
                     "link": "https://www.bestbuy.com" + link["href"],
-                    "img_link": img_link,
+                    "img_link": img_link["src"] if img_link else None,
                     "website": "BestBuy",
                 }
             )
-
-    print("res from bestbuy", results)
     return results
 
 
