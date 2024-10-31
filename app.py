@@ -1,30 +1,18 @@
-from fastapi import Depends
-from flask import Flask, request, jsonify
-from flask_mail import Mail, Message
-
-from database.database import engine, db_session
-from util.hashing import get_hashed_password, verify_password
-from sqlalchemy.orm import Session
-import database.models as models
-from flask_cors import CORS
-from datetime import datetime
-from bs4 import BeautifulSoup
-import requests
-import re
-from apscheduler.schedulers.background import BackgroundScheduler
-import atexit
+from util.imports import *
+from util.config import *
 
 app = Flask(__name__)
 CORS(app)
 # app.config.from_pyfile("settings.py")
 
-app.config["MAIL_SERVER"] = "smtp.gmail.com"
-app.config["MAIL_PORT"] = 587
-app.config["MAIL_USE_TLS"] = True
-app.config["MAIL_USE_SSL"] = False
-app.config["MAIL_USERNAME"] = "myprojectstesting2000@gmail.com"
-app.config["MAIL_PASSWORD"] = "Testing@Projects@TempEmail"
-app.config["MAIL_DEFAULT_SENDER"] = "myprojectstesting2000@gmail.com"
+# config.py
+MAIL_SERVER = 'smtp.gmail.com'
+MAIL_PORT = 587
+MAIL_USE_TLS = True
+MAIL_USE_SSL = False
+MAIL_USERNAME = 'myprojectstesting2000@gmail.com'
+MAIL_PASSWORD = 'Testing@Projects@TempEmail'
+MAIL_DEFAULT_SENDER = 'myprojectstesting2000@gmail.com'
 
 mail = Mail(app)
 
