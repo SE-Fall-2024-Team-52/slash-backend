@@ -1,4 +1,17 @@
-from util.imports import *
+from fastapi import Depends
+from flask import Flask, request, jsonify
+from flask_mail import Mail, Message
+from database.database import engine, db_session
+from util.hashing import get_hashed_password, verify_password
+from sqlalchemy.orm import Session
+import database.models as models
+from flask_cors import CORS
+from datetime import datetime
+from bs4 import BeautifulSoup
+import requests
+import re
+from apscheduler.schedulers.background import BackgroundScheduler
+import atexit
 from util.config import *
 
 app = Flask(__name__)
@@ -235,16 +248,12 @@ def scrape_bestbuy(item_name):
 
 @app.route("/api/wishlist", methods=["POST"])
 def add_to_wishlist():
+    """Adds an item to the user's wishlist."""
     item = request.json.get("item")
     username = request.json.get("username")
-    existing_item = (
-        db_session.query(models.PriceTrackProducts)
-        .filter(models.PriceTrackProducts.product_url == item.get("link"))
-        .first()
-    )
-    user = (
-        db_session.query(models.Users).filter(models.Users.username == username).first()
-    )
+    existing_item = db_session.query(models.PriceTrackProducts).filter(models.PriceTrackProducts.product_url == item.get("link")).first()
+    user = db_session.query(models.Users).filter(models.Users.username == username).first()
+
     if not existing_item:
         existing_item = models.PriceTrackProducts(
             product_name=item.get("title"),
@@ -256,7 +265,7 @@ def add_to_wishlist():
         )
         db_session.add(existing_item)
         db_session.commit()
-        db_session.refresh(existing_item)
+
     wishlist_item = models.Wishlist(
         product_id=existing_item.id,
         user_id=user.id,
@@ -265,104 +274,76 @@ def add_to_wishlist():
     )
     db_session.add(wishlist_item)
     db_session.commit()
-    return jsonify({"message": "Item added to wishlist successfully! "}), 200
+    return jsonify({"message": "Item added to wishlist successfully!"}), 200
 
 
 @app.route("/api/wishlist/<product_id>", methods=["DELETE"])
 def remove_from_wishlist(product_id):
-
-    existing_item = (
-        db_session.query(models.Wishlist)
-        .filter(models.Wishlist.id == product_id)
-        .first()
-    )
+    """Removes an item from the user's wishlist."""
+    existing_item = db_session.query(models.Wishlist).filter(models.Wishlist.id == product_id).first()
     if not existing_item:
         return jsonify({"message": "Item not found in wishlist"}), 404
+
     db_session.delete(existing_item)
     db_session.commit()
-    return jsonify({"message": "Item removed from wishlist successfully! "}), 200
+    return jsonify({"message": "Item removed from wishlist successfully!"}), 200
 
 
 @app.route("/api/wishlist/<username>", methods=["GET"])
 def get_wishlist(username):
-    user = (
-        db_session.query(models.Users).filter(models.Users.username == username).first()
-    )
+    """Fetches the user's wishlist."""
+    user = db_session.query(models.Users).filter(models.Users.username == username).first()
     if not user:
         return jsonify({"message": "User not found"}), 404
-    wishlist_objects = (
-        db_session.query(models.Wishlist)
-        .filter(models.Wishlist.user_id == user.id)
-        .all()
-    )
-    wishlist = []
-    for w in wishlist_objects:
-        print(w.product_id)
-        product = (
-            db_session.query(models.PriceTrackProducts)
-            .filter(models.PriceTrackProducts.id == w.product_id)
-            .first()
-        )
-        wishlist.append(
-            {
-                "id": w.id,
-                "user_id": w.user_id,
-                "title": product.product_name,
-                "price": product.price,
-                "link": product.product_url,
-                "website": product.site,
-                "img_link": product.img_url,
-            }
-        )
+
+    wishlist_objects = db_session.query(models.Wishlist).filter(models.Wishlist.user_id == user.id).all()
+    wishlist = [
+        {
+            "id": w.id,
+            "user_id": w.user_id,
+            "title": product.product_name,
+            "price": product.price,
+            "link": product.product_url,
+            "website": product.site,
+            "img_link": product.img_url,
+        }
+        for w in wishlist_objects
+        if (product := db_session.query(models.PriceTrackProducts).filter(models.PriceTrackProducts.id == w.product_id).first())
+    ]
     return jsonify(wishlist), 200
 
 
 @app.route("/add-posting", methods=["POST"])
 def add_posting():
+    """Adds a product posting."""
+    data = request.json
+    username = data.get("username")
+    user = db_session.query(models.Users).filter(models.Users.username == username).first()
 
-    name = request.json.get("name")
-    description = request.json.get("description")
-    price = request.json.get("price")
-    currency = request.json.get("currency")
-    username = request.json.get("username")
-    today_date = datetime.today().strftime("%Y-%m-%d")
-
-    validation1 = (
-        db_session.query(models.Users).filter(models.Users.username == username).first()
-    )
-    if validation1 is None:
-        return jsonify(
-            content={"status": "error", "message": f"User {username} does not exist"}
-        )
+    if not user:
+        return jsonify(content={"status": "error", "message": f"User {username} does not exist"})
 
     new_product = models.ProductPostings(
-        name=name,
-        description=description,
-        price=price,
-        currency=currency,
-        date_posted=today_date,
-        posted_by=validation1.id,
+        name=data.get("name"),
+        description=data.get("description"),
+        price=data.get("price"),
+        currency=data.get("currency"),
+        date_posted=datetime.today().strftime("%Y-%m-%d"),
+        posted_by=user.id,
         sold=False,
     )
     db_session.add(new_product)
     db_session.commit()
 
-    return jsonify(
-        content={
-            "status": "success",
-        }
-    )
+    return jsonify(content={"status": "success"})
 
 
-@app.route("/send-email/<email>")
 def send_email(email, content):
-    print("Sending Email for user: ", email)
+    """Sends an email for price drop alerts."""
     msg = Message("Price drop alert", recipients=[email])
     msg.body = content
-    print("Email msg: ", msg.body)
     try:
         mail.send(msg)
-        print("Email sent: ", msg)
         return f"Email sent to {email}!"
     except Exception as e:
         print(str(e))
@@ -371,6 +352,7 @@ def send_email(email, content):
 
 @app.route("/api/price-drop-alert", methods=["POST"])
 def send_price_drop_alert():
+    """Handles sending price drop alerts to users."""
     username = request.json.get("username")
     user = (
         db_session.query(models.Users).filter(models.Users.username == username).first()
@@ -408,82 +390,64 @@ def send_price_drop_alert():
 
 @app.route("/login", methods=["POST"])
 def login():
+    """Logs in a user."""
     username = request.json.get("username")
     password = request.json.get("password")
 
-    user = (
-        db_session.query(models.Users).filter(models.Users.username == username).first()
-    )
-
-    if user is None:
+    user = db_session.query(models.Users).filter(models.Users.username == username).first()
+    if not user:
         return jsonify(content={"status": "error", "message": "User does not exist"})
 
     if not verify_password(password, user.hashed_password):
-        return jsonify(
-            content={
-                "status": "error",
-                "message": "Invalid password",
-            }
-        )
+        return jsonify(content={"status": "error", "message": "Invalid password"})
 
-    return jsonify(
-        content={
-            "status": "success",
-            "message": "User successfully logged in",
-            "data": {
-                "username": user.username,
-                "email": user.email,
-                "firstname": user.first_name,
-                "lastname": user.last_name,
-            },
-        }
-    )
+    return jsonify(content={
+        "status": "success",
+        "message": "User successfully logged in",
+        "data": {
+            "username": user.username,
+            "email": user.email,
+            "firstname": user.first_name,
+            "lastname": user.last_name,
+        },
+    })
 
 
 @app.route("/register", methods=["POST"])
 def register_user():
-    username = request.json.get("username")
-    email = request.json.get("email")
-    firstname = request.json.get("firstname")
-    lastname = request.json.get("lastname")
-    password = request.json.get("password")
+    """Registers a new user."""
+    data = request.json
+    username = data.get("username")
+    email = data.get("email")
+    firstname = data.get("firstname")
+    lastname = data.get("lastname")
+    password = data.get("password")
 
-    validation1 = (
-        db_session.query(models.Users).filter(models.Users.username == username).first()
-    )
-
-    validation2 = (
-        db_session.query(models.Users).filter(models.Users.email == email).first()
-    )
-
-    if validation1 is not None:
+    if db_session.query(models.Users).filter(models.Users.username == username).first():
         return jsonify(content={"status": "error", "message": "Username already taken"})
-    if validation2 is not None:
-        return jsonify(content={"status": "error", "message": "Email-id already taken"})
+    if db_session.query(models.Users).filter(models.Users.email == email).first():
+        return jsonify(content={"status": "error", "message": "Email already taken"})
 
-    user_model = models.Users()
-    user_model.username = username
-    user_model.email = email
-    user_model.first_name = firstname
-    user_model.last_name = lastname
-    hash_password = get_hashed_password(password)
-    user_model.hashed_password = hash_password
+    user_model = models.Users(
+        username=username,
+        email=email,
+        first_name=firstname,
+        last_name=lastname,
+        hashed_password=get_hashed_password(password)
+    )
     db_session.add(user_model)
     db_session.commit()
 
-    return jsonify(
-        content={
-            "status": "success",
-            "message": "User successfully created",
-            "data": {
-                "username": username,
-                "email": email,
-                "firstname": firstname,
-                "lastname": lastname,
-            },
-        }
-    )
-
+    return jsonify(content={
+        "status": "success",
+        "message": "User successfully created",
+        "data": {
+            "username": username,
+            "email": email,
+            "firstname": firstname,
+            "lastname": lastname,
+        },
+    })
 
 models.Base.metadata.create_all(bind=engine)
 
