@@ -19,16 +19,17 @@ CORS(app)
 # app.config.from_pyfile("settings.py")
 
 # Mail configuration
-app.config['MAIL_SERVER'] = MAIL_SERVER
-app.config['MAIL_PORT'] = MAIL_PORT
-app.config['MAIL_USE_TLS'] = MAIL_USE_TLS
-app.config['MAIL_USE_SSL'] = MAIL_USE_SSL
-app.config['MAIL_USERNAME'] = MAIL_USERNAME
-app.config['MAIL_PASSWORD'] = MAIL_PASSWORD
-app.config['MAIL_DEFAULT_SENDER'] = MAIL_DEFAULT_SENDER
+app.config["MAIL_SERVER"] = MAIL_SERVER
+app.config["MAIL_PORT"] = MAIL_PORT
+app.config["MAIL_USE_TLS"] = MAIL_USE_TLS
+app.config["MAIL_USE_SSL"] = MAIL_USE_SSL
+app.config["MAIL_USERNAME"] = MAIL_USERNAME
+app.config["MAIL_PASSWORD"] = MAIL_PASSWORD
+app.config["MAIL_DEFAULT_SENDER"] = MAIL_DEFAULT_SENDER
 
 mail = Mail(app)
 BASE_URL = "http://localhost:5000"
+
 
 def schedule_price_drop_alert():
     """Schedules price drop alerts for users."""
@@ -176,11 +177,19 @@ def scrape_target(item_name):
     soup = BeautifulSoup(response.text, "html.parser")
     results = []
 
-    products = soup.select('div[data-test="product-grid"] section[class^="styles__StyledRowWrapper"] div[class^="styles__StyledCardWrapper"]')
+    products = soup.select(
+        'div[data-test="product-grid"] section[class^="styles__StyledRowWrapper"] div[class^="styles__StyledCardWrapper"]'
+    )
     for item in products:
-        title = item.select_one('div[data-test="product-details"] a[data-test="product-title"]')
-        price = item.select_one('div[data-test="product-details"] span[data-test="current-price"]')
-        link = item.select_one('div[data-test="product-details"] a[data-test="product-title"]')
+        title = item.select_one(
+            'div[data-test="product-details"] a[data-test="product-title"]'
+        )
+        price = item.select_one(
+            'div[data-test="product-details"] span[data-test="current-price"]'
+        )
+        link = item.select_one(
+            'div[data-test="product-details"] a[data-test="product-title"]'
+        )
 
         if title and price and link:
             results.append(
@@ -251,8 +260,14 @@ def add_to_wishlist():
     """Adds an item to the user's wishlist."""
     item = request.json.get("item")
     username = request.json.get("username")
-    existing_item = db_session.query(models.PriceTrackProducts).filter(models.PriceTrackProducts.product_url == item.get("link")).first()
-    user = db_session.query(models.Users).filter(models.Users.username == username).first()
+    existing_item = (
+        db_session.query(models.PriceTrackProducts)
+        .filter(models.PriceTrackProducts.product_url == item.get("link"))
+        .first()
+    )
+    user = (
+        db_session.query(models.Users).filter(models.Users.username == username).first()
+    )
 
     if not existing_item:
         existing_item = models.PriceTrackProducts(
@@ -280,7 +295,11 @@ def add_to_wishlist():
 @app.route("/api/wishlist/<product_id>", methods=["DELETE"])
 def remove_from_wishlist(product_id):
     """Removes an item from the user's wishlist."""
-    existing_item = db_session.query(models.Wishlist).filter(models.Wishlist.id == product_id).first()
+    existing_item = (
+        db_session.query(models.Wishlist)
+        .filter(models.Wishlist.id == product_id)
+        .first()
+    )
     if not existing_item:
         return jsonify({"message": "Item not found in wishlist"}), 404
 
@@ -292,11 +311,17 @@ def remove_from_wishlist(product_id):
 @app.route("/api/wishlist/<username>", methods=["GET"])
 def get_wishlist(username):
     """Fetches the user's wishlist."""
-    user = db_session.query(models.Users).filter(models.Users.username == username).first()
+    user = (
+        db_session.query(models.Users).filter(models.Users.username == username).first()
+    )
     if not user:
         return jsonify({"message": "User not found"}), 404
 
-    wishlist_objects = db_session.query(models.Wishlist).filter(models.Wishlist.user_id == user.id).all()
+    wishlist_objects = (
+        db_session.query(models.Wishlist)
+        .filter(models.Wishlist.user_id == user.id)
+        .all()
+    )
     wishlist = [
         {
             "id": w.id,
@@ -308,7 +333,11 @@ def get_wishlist(username):
             "img_link": product.img_url,
         }
         for w in wishlist_objects
-        if (product := db_session.query(models.PriceTrackProducts).filter(models.PriceTrackProducts.id == w.product_id).first())
+        if (
+            product := db_session.query(models.PriceTrackProducts)
+            .filter(models.PriceTrackProducts.id == w.product_id)
+            .first()
+        )
     ]
     return jsonify(wishlist), 200
 
@@ -318,10 +347,14 @@ def add_posting():
     """Adds a product posting."""
     data = request.json
     username = data.get("username")
-    user = db_session.query(models.Users).filter(models.Users.username == username).first()
+    user = (
+        db_session.query(models.Users).filter(models.Users.username == username).first()
+    )
 
     if not user:
-        return jsonify(content={"status": "error", "message": f"User {username} does not exist"})
+        return jsonify(
+            content={"status": "error", "message": f"User {username} does not exist"}
+        )
 
     new_product = models.ProductPostings(
         name=data.get("name"),
@@ -394,23 +427,27 @@ def login():
     username = request.json.get("username")
     password = request.json.get("password")
 
-    user = db_session.query(models.Users).filter(models.Users.username == username).first()
+    user = (
+        db_session.query(models.Users).filter(models.Users.username == username).first()
+    )
     if not user:
         return jsonify(content={"status": "error", "message": "User does not exist"})
 
     if not verify_password(password, user.hashed_password):
         return jsonify(content={"status": "error", "message": "Invalid password"})
 
-    return jsonify(content={
-        "status": "success",
-        "message": "User successfully logged in",
-        "data": {
-            "username": user.username,
-            "email": user.email,
-            "firstname": user.first_name,
-            "lastname": user.last_name,
-        },
-    })
+    return jsonify(
+        content={
+            "status": "success",
+            "message": "User successfully logged in",
+            "data": {
+                "username": user.username,
+                "email": user.email,
+                "firstname": user.first_name,
+                "lastname": user.last_name,
+            },
+        }
+    )
 
 
 @app.route("/register", methods=["POST"])
@@ -433,21 +470,24 @@ def register_user():
         email=email,
         first_name=firstname,
         last_name=lastname,
-        hashed_password=get_hashed_password(password)
+        hashed_password=get_hashed_password(password),
     )
     db_session.add(user_model)
     db_session.commit()
 
-    return jsonify(content={
-        "status": "success",
-        "message": "User successfully created",
-        "data": {
-            "username": username,
-            "email": email,
-            "firstname": firstname,
-            "lastname": lastname,
-        },
-    })
+    return jsonify(
+        content={
+            "status": "success",
+            "message": "User successfully created",
+            "data": {
+                "username": username,
+                "email": email,
+                "firstname": firstname,
+                "lastname": lastname,
+            },
+        }
+    )
+
 
 models.Base.metadata.create_all(bind=engine)
 
