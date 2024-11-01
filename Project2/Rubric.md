@@ -15,9 +15,9 @@
 |Docs: why: docs tell a story, motivate the whole thing, deliver a punchline that makes you want to rush out and use the thing |3|Evidence in ReadME. https://github.com/SE-vrs-organization/slash-backend/blob/main/README.md|
 |Docs: short video, animated, hosted on your repo. That convinces people why they want to work on your code. |3|Evidence in ReadME.https://github.com/SE-vrs-organization/slash-backend/blob/main/README.md|
 |Use of version control tools|3|https://github.com/SE-vrs-organization/slash-backend#computer-technology-used|
-|Use of style checkers |3| Yes, We have used Style checker. https://github.com/SE-vrs-organization/slash-backend/actions/workflows/style_checker.yml|
-|Use of code formatters. |3|We used Prettier library to format the code in the project.|
-|Use of syntax checkers. |3| Yes, We have used Syntax checker Lint.https://github.com/SE-vrs-organization/slash-backend/actions/workflows/main.yml|
+|Use of style checkers |3| Yes, We have used Style checker. https://github.com/SE-vrs-organization/slash-backend/actions/workflows/blackformatting.yaml|
+|Use of code formatters. |3|We used Black Formatting library to format the code in the project.|
+|Use of syntax checkers. |3| Yes, We have used Syntax checker Lint. https://github.com/SE-vrs-organization/slash-ui/actions/workflows/linting.yaml|
 |Use of code coverage  |3| https://github.com/SE-vrs-organization/slash-backend/actions/workflows/code_cov.yml|
 |other automated analysis tools  |3| Yes, Used automated tool Pylint. https://github.com/SE-vrs-organization/slash-backend/actions/workflows/pylint.yml|
 |test cases exist  |3| Yes, Test cases exist.https://github.com/SE-vrs-organization/slash-backend/actions/workflows/unit_test.yml|
