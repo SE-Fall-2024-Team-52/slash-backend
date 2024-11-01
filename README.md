@@ -90,6 +90,7 @@ Replace username and password value from 'postgres', 'pass' with your PostgreSQL
 flask run
 ```
 5. While the above is running, go to new terminal and run your UI application by following steps from this repository https://github.com/SE-vrs-organization/slash-ui.
+```
 
 :computer: Technology Used
 ---
