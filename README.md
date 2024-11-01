@@ -146,8 +146,8 @@ flask run
 
 
 :golf: Future Roadmap
-
 ---
+
 We envision a range of features aimed at expanding functionality, enhancing user experience, and promoting seamless, interactive shopping. The future roadmap includes the following plans:
 
 1. Enhanced User Experience Features
