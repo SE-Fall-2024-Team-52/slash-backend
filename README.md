@@ -2,6 +2,8 @@
 [![GitHub Release](https://img.shields.io/badge/release-v1.0.1.1-blue)](https://github.com/SE-vrs-organization/slash-backend)
 [![Black Python](https://github.com/SE-vrs-organization/slash-backend/actions/workflows/blackformatting.yaml/badge.svg)](https://github.com/SE-vrs-organization/slash-backend/actions/workflows/blackformatting.yaml)
 [![GitHub license](https://img.shields.io/github/license/SE-vrs-organization/slash-backend)](https://github.com/SE-vrs-organization/slash-backend/blob/main/License.md)
+
+<!--Badges-->
 <a href="https://github.com/SE-vrs-organization/slash-backend/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/SE-vrs-organization/slash-backend"></a>
 <a href="https://github.com/SE-vrs-organization/slash-backend/issues"><img alt="GitHub closed issues" src="https://img.shields.io/github/issues-closed/SE-vrs-organization/slash-backend">
 <a href="https://github.com/SE-vrs-organization/slash-backend/pulls"><img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/SE-vrs-organization/slash-backend">
@@ -90,7 +92,6 @@ Replace username and password value from 'postgres', 'pass' with your PostgreSQL
 flask run
 ```
 5. While the above is running, go to new terminal and run your UI application by following steps from this repository https://github.com/SE-vrs-organization/slash-ui.
-```
 
 :computer: Technology Used
 ---
@@ -122,44 +123,88 @@ Refactored the application into microservices to scale the UI and backend indepe
 Opened the platform to Sellers to directly post their products on the platform.
 Added a  cron job for alerting users about price drop of their favorite products.
 1. **Wish List Page Enhancement**
-   - Description: We have added a price filtering feature that allows users to specify a minimum and maximum price range for their product searches.
-   - Functionality: Users can now refine their search results by setting price limits, ensuring they see only products within their budget.
+   - Description: This feature allows users to set price filters for products added to their wishlists, enhancing search functionality on the platform.
+   - Functionality: 
+      - Price Filtering: Users can now refine their search results by setting price limits, ensuring they see only products within their budget.
+      - User Benefits: This functionality offers a more customized shopping experience, helping users easily find items that match their financial preferences. This not only improves     satisfaction but also increases engagement by providing relevant results.
 2. **User Interface Revamp**
-   - Description: A new sorting feature has been integrated, enabling users to sort products based on their price, from the cheapest to the most expensive.
-   - Functionality: This feature enhances the usability of the search function, allowing users to quickly find products that match their price preferences.
+   - Description: The user interface was completely restructured in React for a more polished, user-centered experience that aids in retaining users.
+   - Functionality: 
+      - This feature enhances the usability of the search function, allowing users to quickly find products that match their price preferences.
+      - Elements like button placements, consistent typography, and cohesive color schemes were used to create an engaging and easy-to-navigate interface.
 3. **Microservices architecture**
-   - Description: To aid users in quickly identifying the most affordable options, the cheapest product in any search or filter result is now highlighted.
-   - Functionality: This visual cue helps users easily locate the best deals without having to manually compare prices.
+   - Description: The application was refactored into a microservices architecture, separating different parts of the platform into individual services to improve scalability.
+   - Functionality: 
+      - Scalable Components: The UI and backend can now scale independently, allowing more efficient resource allocation and reducing downtime.
+      - Highlighted Cheapest Product: The microservices architecture enables independent, optimized processing of search and filter results, allowing the cheapest product in each search to be highlighted. This quick visual indicator guides users to the best deals in real-time.
+      - Enhanced reliability and performance with microservices reduce load times and provide a smoother, faster user experience.
 4. **Platform for Sellers**
-   - Description: Made the UI user friendly and more informative, so that user can use the application easily. The user interface has also been overhauled for a more intuitive and aesthetically pleasing experience.
-   - Functionality: Improvements include streamlined navigation, responsive design elements, and a more cohesive color scheme and typography, enhancing overall user interaction with the application.
-5. **Price Drop Alert**
-   - Description: Most recently added item to wishlist is highlighted and list is displayed based on time of the addition of item to wishlist.
-   - Functionality: Recently added items are displayed first on the list. 
+   - Description: The platform now allows sellers to list products directly, opening a new avenue for revenue and product diversity.
+   - Functionality: 
+      - User-Friendly Interface for Sellers: The UI was revamped for both buyers and sellers. Sellers have access to a user-friendly dashboard where they can add product details, track listings, and view analytics on product views and engagements.
+      - Allows sellers to create detailed product descriptions, upload images, and set prices, giving them full control over their product listings.
+     - Buyers gain access to a greater variety of products from multiple sources, adding value to their shopping experience.
+5. **Price Drop Alert (Cron Job)**
+   - Description: A cron job was implemented to alert users when there is a price drop on products in their wishlist, along with a new organization of items based on the time of addition.
+   - Functionality: 
+      - Users automatically receive alerts when the price of a wishlist item decreases, helping them make timely purchase decisions.
+      - Enhances engagement by giving users up-to-date information about potential savings on favorite items.
 
-<img src = https://github.com/MeryHarikaG/slash-phase5/blob/main/media/Website_2.png>
-<img src = https://github.com/MeryHarikaG/slash-phase5/blob/main/media/Website_3.png>
-<img src = https://github.com/MeryHarikaG/slash-phase5/blob/main/media/Wishlist%20page.png>
 
 :golf: Future Roadmap
+
 ---
-Future Roadmap
+# Future Roadmap
 
-* Pagination Feature: Implement a pagination feature for the result table allowing to scrape and display multiple results from various e-commerce sites in an organized manner.
+We envision a range of features aimed at expanding functionality, enhancing user experience, and promoting seamless, interactive shopping. The future roadmap includes the following plans:
 
-* Additional Account Settings: Introduce additional account settings to give users more control over their profiles and preferences, enhancing their personalization and usability.
+## 1. Enhanced User Experience Features
+- **Pagination Feature**  
+  Implement pagination for the product result table, allowing users to browse multiple products across various e-commerce sites in a structured, organized manner. This feature aims to improve data display, prevent clutter, and enhance navigation within search results.
 
-* Predictive Model: Develop a predictive model that can determine the optimal timing for purchasing the least expensive product from the search results. This feature will provide valuable guidance to users, helping them make informed decisions.
+- **Additional Account Settings**  
+  Introduce more user-centric account settings, enabling users to tailor their profile and preferences to meet their needs. This will increase personalization and usability, making the platform more engaging and adaptable.
 
-* Enhanced Search Capabilities: Improve the search functionality by introducing advanced search capabilities. This can include options for filtering search results based on ratings, and other relevant criteria, giving users more refined search options.
+- **Social Media Login**  
+  Integrate social media login options (Gmail, Facebook, etc.) for secure, convenient user access. This reduces sign-up barriers and enhances account security, providing a more flexible login experience.
 
-* Multi-Platform Integration: Expand the platform's capabilities by incorporating search results from various e-commerce platforms such as Etsy, Dick's Sporting Goods, and more. This will provide users with optimized outcomes from a diverse selection of online vendors.
+- **Wishlist Sharing**  
+  Enable users to share their wishlists with friends and family. This collaborative feature is ideal for sharing gift ideas, making joint shopping lists, and seeking recommendations, adding a social dimension to the platform.
 
-* Social Media Login: Add support for different methods of login, such as Gmail, Facebook, or other social media accounts, to provide users with convenient and secure login options.
+## 2. Advanced Data and Predictive Capabilities
+- **Predictive Model for Optimal Purchase Timing**  
+  Develop a predictive model to analyze price trends and predict the best timing for purchasing items at the lowest price. This intelligent feature will provide valuable insights, guiding users to make well-informed purchasing decisions.
 
-* Price Chart Visualization: Introduce a visual representation of price trends for products. This feature can help users understand historical price changes and make more informed purchasing decisions.
+- **Price Chart Visualization**  
+  Introduce a feature that visually represents price trends over time, allowing users to track historical price changes. This can help users understand pricing patterns and make smarter, data-driven purchase decisions.
 
-* Wishlist Sharing: Enable users to share their wishlists with others. This collaborative feature can be useful for sharing gift ideas or getting recommendations from friends and family.
+## 3. Improved Search and Filtering
+- **Enhanced Search Capabilities**  
+  Upgrade the search functionality with advanced filters, allowing users to refine results by criteria such as ratings, price, brand, and more. This will help users quickly locate the products that best fit their preferences and needs.
+
+- **Multi-Platform Integration**  
+  Extend the search functionality to include results from a wider range of e-commerce platforms, such as Etsy and Dick's Sporting Goods. This will provide users with a comprehensive selection of options from diverse online vendors, enhancing the overall shopping experience.
+
+- **Seller-Posted Item Search**  
+  Add a dedicated search function for items posted directly by sellers on the platform, allowing users to browse products listed by small vendors or individual sellers more easily.
+
+## 4. Expanded Shopping and Transaction Features
+- **Shopping Cart and Payment Integration**  
+  Implement a full e-commerce experience by adding a shopping cart and payment system, allowing buyers to purchase items posted by sellers directly on the platform. This end-to-end transaction support will streamline the buying process and provide a unified shopping solution.
+
+- **Wishlist and Favorites Tracking**  
+  Enable persistent login sessions using session cookies, allowing users to access their wishlist and preferences without needing to log in repeatedly. This continuity enhances the user experience by ensuring favorite items and browsing history remain accessible.
+
+## 5. Role-Based Access and Seller Tools
+- **Role-Based Login System**  
+  Introduce role-based login to distinguish between buyers and sellers, providing tailored access and functionality based on user roles. This will improve the platform's organizational structure and security.
+
+- **Integrated Chatbot for Buyer-Seller Communication**  
+  Add a chatbot to facilitate real-time conversations between buyers and sellers, allowing them to discuss products and negotiate prices. This feature will encourage interactive communication and foster trust between users.
+
+## 6. Persistent User Session
+- **Persistent Login with Session Cookies**  
+  Maintain user sessions by storing session cookies, allowing users to stay logged in between sessions. This feature enhances the user experience by keeping accounts readily accessible and reducing repeated logins.
 
 
 :sparkles: Contributors
@@ -174,8 +219,7 @@ Future Roadmap
 ## 🙏 Acknowledgements <a name="Acknowledgement"></a>
 We would like to thank Professor Dr Timothy Menzies for helping us understand the process of Maintaining a good Software Engineering project. We would also like to thank the teaching assistants for their support throughout the project.
 We would also like to extend our gratitude to previous group : https://github.com/MeryHarikaG/slash-phase5
-- [https://streamlit.io/](https://streamlit.io/)
-- [https://shields.io/](https://shields.io/)
+
 
 :email: Support
 ---
