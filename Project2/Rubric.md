@@ -29,7 +29,7 @@
 |Evidence that the whole team is using the same tools: everyone can get to all tools and files|3|https://github.com/SE-vrs-organization/slash-backend/pulse|
 |evidence that the whole team is using the same tools (e.g. config files in the repo, updated by lots of different people) |3|1. All the members of the team have set up environments setup locally. <br> 2. Everyone is using the same IDE, packages and tech stack to build the project. https://github.com/SE-vrs-organization/slash-backend/pulse|
 |Evidence that the whole team is using the same tools (e.g. tutor can ask anyone to share screen, they demonstrate the system running on their computer)|3|https://github.com/SE-vrs-organization/slash-backend/pulse|
-|evidence that the members of the team are working across multiple places in the code base |3|https://github.com/SE-vrs-organization/slash-backend/blob/main/src/pages/search.py<br>https://github.com/SE-vrs-organization/slash-backend/blob/main/src/pages/wishlist.py<br>https://github.com/SE-vrs-organization/slash-backend/blob/main/src/configs.py|
+|evidence that the members of the team are working across multiple places in the code base |3|https://github.com/SE-vrs-organization/slash-backend/blob/main/app.py <br>https://github.com/SE-vrs-organization/slash-ui/tree/main/src <br> https://github.com/SE-vrs-organization/slash-backend/tree/main/database|
 |Short release cycles|3|https://github.com/SE-vrs-organization/slash-backend/releases|
 |Does your website and documentation provide a clear, high-level overview of your software?|3|https://github.com/SE-vrs-organization/slash-backend|
 |Does your website and documentation clearly describe the type of user who should use your software?|3|https://github.com/SE-vrs-organization/slash-backend|
