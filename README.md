@@ -116,12 +116,6 @@ flask run
 
 :golf: Phase 6 developments
 ---
-1. 
-Added wishlists to track your favorite products.
-Revamped the UI in React to improve user experience and help with user retention.
-Refactored the application into microservices to scale the UI and backend independently.
-Opened the platform to Sellers to directly post their products on the platform.
-Added a  cron job for alerting users about price drop of their favorite products.
 1. **Wish List Page Enhancement**
    - Description: This feature allows users to set price filters for products added to their wishlists, enhancing search functionality on the platform.
    - Functionality: 
@@ -154,57 +148,68 @@ Added a  cron job for alerting users about price drop of their favorite products
 :golf: Future Roadmap
 
 ---
-# Future Roadmap
-
 We envision a range of features aimed at expanding functionality, enhancing user experience, and promoting seamless, interactive shopping. The future roadmap includes the following plans:
 
-## 1. Enhanced User Experience Features
-- **Pagination Feature**  
-  Implement pagination for the product result table, allowing users to browse multiple products across various e-commerce sites in a structured, organized manner. This feature aims to improve data display, prevent clutter, and enhance navigation within search results.
+1. Enhanced User Experience Features
+   - **Pagination Feature**  
+      - Implement pagination for the product result table, allowing users to browse multiple products across various e-commerce sites in a structured, organized manner. 
+      - This feature aims to improve data display, prevent clutter, and enhance navigation within search results.
 
-- **Additional Account Settings**  
-  Introduce more user-centric account settings, enabling users to tailor their profile and preferences to meet their needs. This will increase personalization and usability, making the platform more engaging and adaptable.
+   - **Additional Account Settings**  
+      - Introduce more user-centric account settings, enabling users to tailor their profile and preferences to meet their needs. 
+      - This will increase personalization and usability, making the platform more engaging and adaptable.
 
-- **Social Media Login**  
-  Integrate social media login options (Gmail, Facebook, etc.) for secure, convenient user access. This reduces sign-up barriers and enhances account security, providing a more flexible login experience.
+   - **Social Media Login**  
+      - Integrate social media login options (Gmail, Facebook, etc.) for secure, convenient user access. 
+      - This reduces sign-up barriers and enhances account security, providing a more flexible login experience.
 
-- **Wishlist Sharing**  
-  Enable users to share their wishlists with friends and family. This collaborative feature is ideal for sharing gift ideas, making joint shopping lists, and seeking recommendations, adding a social dimension to the platform.
+   - **Wishlist Sharing**  
+      - Enable users to share their wishlists with friends and family. 
+      - This collaborative feature is ideal for sharing gift ideas, making joint shopping lists, and seeking recommendations, adding a social dimension to the platform.
 
-## 2. Advanced Data and Predictive Capabilities
-- **Predictive Model for Optimal Purchase Timing**  
-  Develop a predictive model to analyze price trends and predict the best timing for purchasing items at the lowest price. This intelligent feature will provide valuable insights, guiding users to make well-informed purchasing decisions.
+2. Advanced Data and Predictive Capabilities
+   - **Predictive Model for Optimal Purchase Timing**  
+      - Develop a predictive model to analyze price trends and predict the best timing for purchasing items at the lowest price. 
+      - This intelligent feature will provide valuable insights, guiding users to make well-informed purchasing decisions.
 
-- **Price Chart Visualization**  
-  Introduce a feature that visually represents price trends over time, allowing users to track historical price changes. This can help users understand pricing patterns and make smarter, data-driven purchase decisions.
+   - **Price Chart Visualization**  
+      - Introduce a feature that visually represents price trends over time, allowing users to track historical price changes. 
+      - This can help users understand pricing patterns and make smarter, data-driven purchase decisions.
 
-## 3. Improved Search and Filtering
-- **Enhanced Search Capabilities**  
-  Upgrade the search functionality with advanced filters, allowing users to refine results by criteria such as ratings, price, brand, and more. This will help users quickly locate the products that best fit their preferences and needs.
+3. Improved Search and Filtering
+   - **Enhanced Search Capabilities**  
+      - Upgrade the search functionality with advanced filters, allowing users to refine results by criteria such as ratings, price, brand, and more. 
+      - This will help users quickly locate the products that best fit their preferences and needs.
 
-- **Multi-Platform Integration**  
-  Extend the search functionality to include results from a wider range of e-commerce platforms, such as Etsy and Dick's Sporting Goods. This will provide users with a comprehensive selection of options from diverse online vendors, enhancing the overall shopping experience.
+   - **Multi-Platform Integration**  
+      - Extend the search functionality to include results from a wider range of e-commerce platforms, such as Etsy and Dick's Sporting Goods. 
+      - This will provide users with a comprehensive selection of options from diverse online vendors, enhancing the overall shopping experience.
 
-- **Seller-Posted Item Search**  
-  Add a dedicated search function for items posted directly by sellers on the platform, allowing users to browse products listed by small vendors or individual sellers more easily.
+   - **Seller-Posted Item Search**  
+      - Add a dedicated search function for items posted directly by sellers on the platform, allowing users to browse products listed by small vendors or individual sellers more easily.
 
-## 4. Expanded Shopping and Transaction Features
-- **Shopping Cart and Payment Integration**  
-  Implement a full e-commerce experience by adding a shopping cart and payment system, allowing buyers to purchase items posted by sellers directly on the platform. This end-to-end transaction support will streamline the buying process and provide a unified shopping solution.
+4. Expanded Shopping and Transaction Features
+   - **Shopping Cart and Payment Integration**  
+      - Implement a full e-commerce experience by adding a shopping cart and payment system, allowing buyers to purchase items posted by sellers directly on the platform. 
+      - This end-to-end transaction support will streamline the buying process and provide a unified shopping solution.
 
-- **Wishlist and Favorites Tracking**  
-  Enable persistent login sessions using session cookies, allowing users to access their wishlist and preferences without needing to log in repeatedly. This continuity enhances the user experience by ensuring favorite items and browsing history remain accessible.
+   - **Wishlist and Favorites Tracking**  
+      - Enable persistent login sessions using session cookies, allowing users to access their wishlist and preferences without needing to log in repeatedly. 
+      - This continuity enhances the user experience by ensuring favorite items and browsing history remain accessible.
 
-## 5. Role-Based Access and Seller Tools
-- **Role-Based Login System**  
-  Introduce role-based login to distinguish between buyers and sellers, providing tailored access and functionality based on user roles. This will improve the platform's organizational structure and security.
+5. Role-Based Access and Seller Tools
+   - **Role-Based Login System**  
+      - Introduce role-based login to distinguish between buyers and sellers, providing tailored access and functionality based on user roles. 
+      - This will improve the platform's organizational structure and security.
 
-- **Integrated Chatbot for Buyer-Seller Communication**  
-  Add a chatbot to facilitate real-time conversations between buyers and sellers, allowing them to discuss products and negotiate prices. This feature will encourage interactive communication and foster trust between users.
+   - **Integrated Chatbot for Buyer-Seller Communication**  
+      - Add a chatbot to facilitate real-time conversations between buyers and sellers, allowing them to discuss products and negotiate prices. 
+      - This feature will encourage interactive communication and foster trust between users.
 
-## 6. Persistent User Session
-- **Persistent Login with Session Cookies**  
-  Maintain user sessions by storing session cookies, allowing users to stay logged in between sessions. This feature enhances the user experience by keeping accounts readily accessible and reducing repeated logins.
+6. Persistent User Session
+   - **Persistent Login with Session Cookies**  
+      - Maintain user sessions by storing session cookies, allowing users to stay logged in between sessions. 
+      - This feature enhances the user experience by keeping accounts readily accessible and reducing repeated logins.
 
 
 :sparkles: Contributors
