@@ -45,7 +45,7 @@
 |If you provide more extensive documentation, does this provide clear, step-by-step instructions on how to deploy and use your software?|3|Step by step instructions are given. https://github.com/SE-vrs-organization/slash-backend/blob/main/README.md#rocket-installation|
 |Do you provide a comprehensive guide to all your software’s commands, functions and options?|3|https://github.com/SE-vrs-organization/slash-backend/blob/main/README.md#movie_camera-checkout-our-video|
 |Do you provide troubleshooting information that describes the symptoms and step-by-step solutions for problems and error messages?|3|https://github.com/SE-vrs-organization/slash-backend/blob/main/README.md|
-|If your software can be used as a library, package or service by other software, do you provide comprehensive API documentation?|3|https://github.com/SE-vrs-organization/slash-backend/blob/main/docs/Code%20Description_Phase-5.pdf|
+|If your software can be used as a library, package or service by other software, do you provide comprehensive API documentation?|3|https://github.com/SE-vrs-organization/slash-backend/blob/main/docs/Code%20Description_Phase-6.pdf|
 |Do you store your documentation under revision control with your source code?|3|https://github.com/SE-vrs-organization/slash-backend/tree/main|
 |Do you publish your release history e.g. release data, version numbers, key features of each release etc. on your web site or in your documentation?|3|https://github.com/SE-vrs-organization/slash-backend/blob/main/README.md|
 |Does your software describe how a user can get help with using your software?|3|https://github.com/SE-vrs-organization/slash-backend#interrobang-troubleshooting|
