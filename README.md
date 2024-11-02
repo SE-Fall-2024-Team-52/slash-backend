@@ -116,34 +116,30 @@ flask run
 
 :golf: Phase 6 developments
 ---
-1. **Wish List Page Enhancement**
-   - Description: This feature allows users to set price filters for products added to their wishlists, enhancing search functionality on the platform.
-   - Functionality: 
-      - Price Filtering: Users can now refine their search results by setting price limits, ensuring they see only products within their budget.
-      - User Benefits: This functionality offers a more customized shopping experience, helping users easily find items that match their financial preferences. This not only improves     satisfaction but also increases engagement by providing relevant results.
-2. **User Interface Revamp**
+
+1. **User Interface Revamp**
    - Description: The user interface was completely restructured in React for a more polished, user-centered experience that aids in retaining users.
    - Functionality: 
       - This feature enhances the usability of the search function, allowing users to quickly find products that match their price preferences.
       - Elements like button placements, consistent typography, and cohesive color schemes were used to create an engaging and easy-to-navigate interface.
-3. **Microservices architecture**
+2. **Microservices architecture**
    - Description: The application was refactored into a microservices architecture, separating different parts of the platform into individual services to improve scalability.
    - Functionality: 
       - Scalable Components: The UI and backend can now scale independently, allowing more efficient resource allocation and reducing downtime.
       - Highlighted Cheapest Product: The microservices architecture enables independent, optimized processing of search and filter results, allowing the cheapest product in each search to be highlighted. This quick visual indicator guides users to the best deals in real-time.
       - Enhanced reliability and performance with microservices reduce load times and provide a smoother, faster user experience.
-4. **Platform for Sellers**
+3. **Platform for Sellers**
    - Description: The platform now allows sellers to list products directly, opening a new avenue for revenue and product diversity.
    - Functionality: 
       - User-Friendly Interface for Sellers: The UI was revamped for both buyers and sellers. Sellers have access to a user-friendly dashboard where they can add product details, track listings, and view analytics on product views and engagements.
       - Allows sellers to create detailed product descriptions, upload images, and set prices, giving them full control over their product listings.
      - Buyers gain access to a greater variety of products from multiple sources, adding value to their shopping experience.
-5. **Price Drop Alert (Cron Job)**
+4. **Price Drop Alert (Cron Job)**
    - Description: A cron job was implemented to alert users when there is a price drop on products in their wishlist, along with a new organization of items based on the time of addition.
    - Functionality: 
       - Users automatically receive alerts when the price of a wishlist item decreases, helping them make timely purchase decisions.
       - Enhances engagement by giving users up-to-date information about potential savings on favorite items.
-6. **Images for Scheduler job**
+5. **Images for Scheduler job**
 
    <img src = https://github.com/SE-vrs-organization/slash-backend/blob/main/assets/scheduler.jpg>
    <img src = https://github.com/SE-vrs-organization/slash-backend/blob/main/assets/price_drop_alert.jpg>
