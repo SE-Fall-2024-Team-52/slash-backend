@@ -143,6 +143,10 @@ flask run
    - Functionality: 
       - Users automatically receive alerts when the price of a wishlist item decreases, helping them make timely purchase decisions.
       - Enhances engagement by giving users up-to-date information about potential savings on favorite items.
+6. **Images for Scheduler job**
+
+   <img src = https://github.com/SE-vrs-organization/slash-backend/blob/main/assets/scheduler.jpg>
+   <img src = https://github.com/SE-vrs-organization/slash-backend/blob/main/assets/price_drop_alert.jpg>
 
 
 :golf: Future Roadmap
