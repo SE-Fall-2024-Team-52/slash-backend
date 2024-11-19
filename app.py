@@ -453,6 +453,37 @@ def place_order():
     db_session.commit()
     return jsonify({"message": "Order placed successfully!"}), 200
 
+
+@app.route("/api/get-orders/<username>", methods=["GET"])
+def get_order(username):
+    """Get orders"""
+    
+    user = (
+        db_session.query(models.Users).filter(models.Users.username == username).first()
+    )
+
+    orders = db_session.query(models.Order).filter(models.Order.user_id == user.id).all()
+    orders = [
+        {
+            "id": o.id,
+            "user_id": o.user_id,
+            "order_id": o.order_id,
+            "date": o.date_added,
+            "title": product.product_name,
+            "price": product.price,
+            "link": product.product_url,
+            "website": product.site,
+            "img_link": product.img_url,
+        }
+        for o in orders
+        if (
+            product := db_session.query(models.PriceTrackProducts)
+            .filter(models.PriceTrackProducts.id == o.product_id)
+            .first()
+        )
+    ]
+    return jsonify(orders), 200
+
 @app.route("/add-posting", methods=["POST"])
 def add_posting():
     """Adds a product posting."""
