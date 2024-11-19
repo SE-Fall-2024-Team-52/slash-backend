@@ -112,3 +112,43 @@ class Wishlist(Base):
     product_id = Column(Integer, ForeignKey("price_track_products.id"), index=True)
     product_type = Column(String)
     date_added = Column(String)
+
+
+"""
+Represents an item added to the shopping cart by a user.
+
+Attributes:
+    id (int): The primary key of the cart item.
+    user_id (int): The ID of the user who added the item to the cart.
+    product_id (int): The ID of the product added to the cart.
+    product_type (str): The type of the product added to the cart.
+    date_added (str): The date when the product was added to the cart.
+"""
+
+
+class Cart(Base):
+    __tablename__ = "cart"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), index=True)
+    product_id = Column(Integer, ForeignKey("price_track_products.id"), index=True)
+    product_type = Column(String)
+    date_added = Column(String)
+
+"""
+Represents an order placed by an user.
+
+Attributes:
+    id (int): The primary key of the order.
+    user_id (int): The ID of the user who added the item to the cart.
+    product_id (int): The ID of the product added to the cart.
+    date_added (str): The date when the product was added to the cart.
+"""
+class Order(Base):
+    __tablename__ = "order"
+
+    id = Column(Integer, primary_key=True, index=True)
+    order_id = Column(String)
+    user_id = Column(Integer, ForeignKey("users.id"), index=True)
+    product_id = Column(Integer, ForeignKey("price_track_products.id"), index=True)
+    date_added = Column(String)

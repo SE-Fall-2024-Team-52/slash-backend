@@ -1,3 +1,5 @@
+import random
+import string
 from fastapi import Depends
 from flask import Flask, request, jsonify
 from flask_mail import Mail, Message
@@ -291,7 +293,6 @@ def add_to_wishlist():
     db_session.commit()
     return jsonify({"message": "Item added to wishlist successfully!"}), 200
 
-
 @app.route("/api/wishlist/<product_id>", methods=["DELETE"])
 def remove_from_wishlist(product_id):
     """Removes an item from the user's wishlist."""
@@ -341,6 +342,116 @@ def get_wishlist(username):
     ]
     return jsonify(wishlist), 200
 
+
+@app.route("/api/cart", methods=["POST"])
+def add_to_cart():
+    """Adds an item to the user's cart."""
+    item = request.json.get("item")
+    username = request.json.get("username")
+    existing_item = (
+        db_session.query(models.PriceTrackProducts)
+        .filter(models.PriceTrackProducts.product_url == item.get("link"))
+        .first()
+    )
+    user = (
+        db_session.query(models.Users).filter(models.Users.username == username).first()
+    )
+
+    if not existing_item:
+        existing_item = models.PriceTrackProducts(
+            product_name=item.get("title"),
+            product_url=item.get("link"),
+            site=item.get("website"),
+            price=float(re.sub(r"[^0-9.]", "", item.get("price")[1:])),
+            currency=item.get("price"),
+            img_url=item.get("img_link"),
+        )
+        db_session.add(existing_item)
+        db_session.commit()
+
+    cart_item = models.Cart(
+        product_id=existing_item.id,
+        user_id=user.id,
+        product_type="online",
+        date_added=datetime.now().strftime("%Y-%m-%d"),
+    )
+    db_session.add(cart_item)
+    db_session.commit()
+    return jsonify({"message": "Item added to cart successfully!"}), 200
+
+
+@app.route("/api/cart/<product_id>", methods=["DELETE"])
+def remove_from_cart(product_id):
+    """Removes an item from the user's cart."""
+    existing_item = (
+        db_session.query(models.Cart)
+        .filter(models.Cart.id == product_id)
+        .first()
+    )
+    if not existing_item:
+        return jsonify({"message": "Item not found in cart"}), 404
+
+    db_session.delete(existing_item)
+    db_session.commit()
+    return jsonify({"message": "Item removed from cart successfully!"}), 200
+
+
+@app.route("/api/cart/<username>", methods=["GET"])
+def get_cart(username):
+    """Fetches the user's cart."""
+    user = (
+        db_session.query(models.Users).filter(models.Users.username == username).first()
+    )
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+
+    cart_objects = (
+        db_session.query(models.Cart)
+        .filter(models.Cart.user_id == user.id)
+        .all()
+    )
+    cart = [
+        {
+            "id": w.id,
+            "user_id": w.user_id,
+            "title": product.product_name,
+            "price": product.price,
+            "link": product.product_url,
+            "website": product.site,
+            "img_link": product.img_url,
+        }
+        for w in cart_objects
+        if (
+            product := db_session.query(models.PriceTrackProducts)
+            .filter(models.PriceTrackProducts.id == w.product_id)
+            .first()
+        )
+    ]
+    return jsonify(cart), 200
+
+
+@app.route("/api/place-order", methods=["POST"])
+def place_order():
+    """Places an order"""
+    items = request.json.get("items")
+    username = request.json.get("username")
+    
+    user = (
+        db_session.query(models.Users).filter(models.Users.username == username).first()
+    )
+
+    order_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+    for item in items:
+        order = models.Order(
+            product_id=item.get('id'),
+            order_id=order_id,
+            user_id=user.id,
+            date_added=datetime.now().strftime("%Y-%m-%d"),
+        )
+        remove_from_cart(item.get('id'))
+        db_session.add(order)
+    db_session.commit()
+    return jsonify({"message": "Order placed successfully!"}), 200
 
 @app.route("/add-posting", methods=["POST"])
 def add_posting():
