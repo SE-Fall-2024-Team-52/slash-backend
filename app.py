@@ -1,4 +1,5 @@
 import random
+import json
 import string
 from fastapi import Depends
 from flask import Flask, request, jsonify
@@ -149,26 +150,32 @@ def search_items_API():
 
 
 def scrape_walmart(item_name: str) -> list[dict]:
+
     """Scrapes Walmart for item details."""
+
     url = f"https://www.walmart.com/search/?q={item_name}"
-    response = requests.get(url)
+    headers = {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:95.0) Gecko/20100101 Firefox/95.0",
+    }
+    response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.text, "html.parser")
     results = []
 
-    for item in soup.select("div.data-item-id"):
-        title = item.select_one("div.span.lh-title")
-        price = item.select_one("div.lh-copy")
-        link = item.select_one(".s-item__link")
+    script_tag = soup.find("script", {"id": "__NEXT_DATA__"})
+    if script_tag is not None:
+        json_blob = json.loads(script_tag.get_text())
+        product_list = json_blob["props"]["pageProps"]["initialData"]["searchResult"]["itemStacks"][0]["items"]
+        base_url = "https://www.walmart.com"
 
-        if title and price and link:
-            results.append(
-                {
-                    "title": title.get_text(strip=True),
-                    "price": price.get_text(strip=True),
-                    "link": link["href"],
-                    "website": "Walmart",
-                }
-            )
+        for product in product_list:
+            results.append({
+                "title": product.get("name", "N/A"),
+                "price": product.get("priceInfo", {}).get("linePrice", "N/A"),
+                "link": base_url + product.get("canonicalUrl", ""),
+                "img_link": product.get("imageInfo", {}).get("thumbnailUrl", "N/A"),
+                "website": "Walmart"
+            })
+
     return results
 
 
