@@ -113,10 +113,10 @@ def search_items_API():
 
     # Scrapers based on the site
     scrapers = {
-        # "walmart": scrape_walmart,
-        # "ebay": scrape_ebay,
-        # "bestbuy": scrape_bestbuy,
-        # "target": scrape_target,
+        "walmart": scrape_walmart,
+        "ebay": scrape_ebay,
+        "bestbuy": scrape_bestbuy,
+        "target": scrape_target,
     }
 
     # Get the appropriate scraper or all
