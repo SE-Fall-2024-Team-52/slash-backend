@@ -608,6 +608,7 @@ def register_user():
     firstname = data.get("firstname")
     lastname = data.get("lastname")
     password = data.get("password")
+    role = data.get("role")
 
     if db_session.query(models.Users).filter(models.Users.username == username).first():
         return jsonify(content={"status": "error", "message": "Username already taken"})
@@ -620,6 +621,7 @@ def register_user():
         first_name=firstname,
         last_name=lastname,
         hashed_password=get_hashed_password(password),
+        role=role,
     )
     db_session.add(user_model)
     db_session.commit()
@@ -633,6 +635,7 @@ def register_user():
                 "email": email,
                 "firstname": firstname,
                 "lastname": lastname,
+                "role": role,
             },
         }
     )
