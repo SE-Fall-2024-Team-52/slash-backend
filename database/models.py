@@ -137,6 +137,7 @@ class Cart(Base):
     product_type = Column(String)
     date_added = Column(String)
 
+
 """
 Represents an order placed by an user.
 
@@ -146,6 +147,8 @@ Attributes:
     product_id (int): The ID of the product added to the cart.
     date_added (str): The date when the product was added to the cart.
 """
+
+
 class Order(Base):
     __tablename__ = "order"
 
