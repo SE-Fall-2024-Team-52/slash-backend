@@ -95,7 +95,10 @@ def get_postings(username):
 
 def extract_price(price_str):
     if not price_str[0].isdigit():
-        return float(price_str[1:])
+        prices = re.findall(r"\d+\.\d+", price_str)
+        if prices:
+            return float(prices[0])
+        return None
     else:
         return float(price_str)
 
@@ -165,7 +168,7 @@ def get_product_postings(item_name: str) -> list[dict[str]]:
             {
                 "title": product.name,
                 "price": str(product.price),
-                "posted by": f"Posted by User:{user.first_name} {user.last_name}",
+                "posted_by": f"{user.username}",
             }
         )
 
