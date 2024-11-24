@@ -94,10 +94,10 @@ def get_postings(username):
 
 
 def extract_price(price_str):
-    prices = re.findall(r"\d+\.\d+", price_str)
-    if prices:
-        return float(prices[0])
-    return None
+    if not price_str[0].isdigit():
+        return float(price_str[1:])
+    else:
+        return float(price_str)
 
 
 @app.route("/api/search", methods=["GET"])
@@ -134,6 +134,8 @@ def search_items_API():
 
     # Filter results based on price range
     # filtered_results = [item for item in results if min_price <= float(item['price'].replace('$', '').replace(',', '')) <= max_price]
+    postings = get_product_postings(item_name.lower())
+    results.extend(postings)
 
     try:
         filtered_results = [
@@ -148,6 +150,26 @@ def search_items_API():
 
     return jsonify(filtered_results)
 
+def get_product_postings(item_name: str) -> list[dict[str]]:
+
+    products = (
+        db_session.query(models.ProductPostings)
+        .filter(models.ProductPostings.name == item_name)
+        .all()
+    )
+    data = list()
+
+    for product in products:
+        user = db_session.query(models.Users).filter(models.Users.id == product.posted_by).first()
+        data.append(
+            {
+                "title": product.name,
+                "price": str(product.price),
+                "posted by": f"Posted by User:{user.first_name} {user.last_name}",
+            }
+        )
+
+    return data
 
 def scrape_walmart(item_name: str) -> list[dict]:
 
@@ -506,7 +528,7 @@ def add_posting():
         )
 
     new_product = models.ProductPostings(
-        name=data.get("name"),
+        name=data.get("name").lower(),
         description=data.get("description"),
         price=data.get("price"),
         currency=data.get("currency"),
