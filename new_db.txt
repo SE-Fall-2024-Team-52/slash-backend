@@ -21,6 +21,7 @@ users:
   first_name: string
   last_name: string
   hashed_password: string
+  role: string
 
 # This table will hold data of products that the users can post
 product_postings:

@@ -13,6 +13,7 @@ Attributes:
     first_name (str): The first name of the user.
     last_name (str): The last name of the user.
     hashed_password (str): The hashed password of the user.
+    role (str): The role of the user - buyer or seller.
 """
 
 
@@ -25,6 +26,7 @@ class Users(Base):
     first_name = Column(String)
     last_name = Column(String)
     hashed_password = Column(String)
+    role = Column(String)
 
 
 """
@@ -135,6 +137,7 @@ class Cart(Base):
     product_type = Column(String)
     date_added = Column(String)
 
+
 """
 Represents an order placed by an user.
 
@@ -144,6 +147,8 @@ Attributes:
     product_id (int): The ID of the product added to the cart.
     date_added (str): The date when the product was added to the cart.
 """
+
+
 class Order(Base):
     __tablename__ = "order"
 

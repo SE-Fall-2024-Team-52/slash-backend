@@ -175,12 +175,11 @@ def get_product_postings(item_name: str) -> list[dict[str]]:
     return data
 
 def scrape_walmart(item_name: str) -> list[dict]:
-
     """Scrapes Walmart for item details."""
 
     url = f"https://www.walmart.com/search/?q={item_name}"
     headers = {
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:95.0) Gecko/20100101 Firefox/95.0",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:95.0) Gecko/20100101 Firefox/95.0",
     }
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.text, "html.parser")
@@ -189,17 +188,21 @@ def scrape_walmart(item_name: str) -> list[dict]:
     script_tag = soup.find("script", {"id": "__NEXT_DATA__"})
     if script_tag is not None:
         json_blob = json.loads(script_tag.get_text())
-        product_list = json_blob["props"]["pageProps"]["initialData"]["searchResult"]["itemStacks"][0]["items"]
+        product_list = json_blob["props"]["pageProps"]["initialData"]["searchResult"][
+            "itemStacks"
+        ][0]["items"]
         base_url = "https://www.walmart.com"
 
         for product in product_list:
-            results.append({
-                "title": product.get("name", "N/A"),
-                "price": product.get("priceInfo", {}).get("linePrice", "N/A"),
-                "link": base_url + product.get("canonicalUrl", ""),
-                "img_link": product.get("imageInfo", {}).get("thumbnailUrl", "N/A"),
-                "website": "Walmart"
-            })
+            results.append(
+                {
+                    "title": product.get("name", "N/A"),
+                    "price": product.get("priceInfo", {}).get("linePrice", "N/A"),
+                    "link": base_url + product.get("canonicalUrl", ""),
+                    "img_link": product.get("imageInfo", {}).get("thumbnailUrl", "N/A"),
+                    "website": "Walmart",
+                }
+            )
 
     return results
 
@@ -325,6 +328,7 @@ def add_to_wishlist():
     db_session.commit()
     return jsonify({"message": "Item added to wishlist successfully!"}), 200
 
+
 @app.route("/api/wishlist/<product_id>", methods=["DELETE"])
 def remove_from_wishlist(product_id):
     """Removes an item from the user's wishlist."""
@@ -416,9 +420,7 @@ def add_to_cart():
 def remove_from_cart(product_id):
     """Removes an item from the user's cart."""
     existing_item = (
-        db_session.query(models.Cart)
-        .filter(models.Cart.id == product_id)
-        .first()
+        db_session.query(models.Cart).filter(models.Cart.id == product_id).first()
     )
     if not existing_item:
         return jsonify({"message": "Item not found in cart"}), 404
@@ -438,9 +440,7 @@ def get_cart(username):
         return jsonify({"message": "User not found"}), 404
 
     cart_objects = (
-        db_session.query(models.Cart)
-        .filter(models.Cart.user_id == user.id)
-        .all()
+        db_session.query(models.Cart).filter(models.Cart.user_id == user.id).all()
     )
     cart = [
         {
@@ -467,20 +467,20 @@ def place_order():
     """Places an order"""
     items = request.json.get("items")
     username = request.json.get("username")
-    
+
     user = (
         db_session.query(models.Users).filter(models.Users.username == username).first()
     )
 
-    order_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+    order_id = "".join(random.choices(string.ascii_uppercase + string.digits, k=10))
     for item in items:
         order = models.Order(
-            product_id=item.get('id'),
+            product_id=item.get("id"),
             order_id=order_id,
             user_id=user.id,
             date_added=datetime.now().strftime("%Y-%m-%d"),
         )
-        remove_from_cart(item.get('id'))
+        remove_from_cart(item.get("id"))
         db_session.add(order)
     db_session.commit()
     return jsonify({"message": "Order placed successfully!"}), 200
@@ -489,12 +489,14 @@ def place_order():
 @app.route("/api/get-orders/<username>", methods=["GET"])
 def get_order(username):
     """Get orders"""
-    
+
     user = (
         db_session.query(models.Users).filter(models.Users.username == username).first()
     )
 
-    orders = db_session.query(models.Order).filter(models.Order.user_id == user.id).all()
+    orders = (
+        db_session.query(models.Order).filter(models.Order.user_id == user.id).all()
+    )
     orders = [
         {
             "id": o.id,
@@ -515,6 +517,7 @@ def get_order(username):
         )
     ]
     return jsonify(orders), 200
+
 
 @app.route("/add-posting", methods=["POST"])
 def add_posting():
@@ -633,6 +636,7 @@ def register_user():
     firstname = data.get("firstname")
     lastname = data.get("lastname")
     password = data.get("password")
+    role = data.get("role")
 
     if db_session.query(models.Users).filter(models.Users.username == username).first():
         return jsonify(content={"status": "error", "message": "Username already taken"})
@@ -645,6 +649,7 @@ def register_user():
         first_name=firstname,
         last_name=lastname,
         hashed_password=get_hashed_password(password),
+        role=role,
     )
     db_session.add(user_model)
     db_session.commit()
@@ -658,6 +663,7 @@ def register_user():
                 "email": email,
                 "firstname": firstname,
                 "lastname": lastname,
+                "role": role,
             },
         }
     )
