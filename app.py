@@ -622,6 +622,7 @@ def login():
                 "email": user.email,
                 "firstname": user.first_name,
                 "lastname": user.last_name,
+                "role": user.role
             },
         }
     )
@@ -633,10 +634,12 @@ def register_user():
     data = request.json
     username = data.get("username")
     email = data.get("email")
-    firstname = data.get("firstname")
-    lastname = data.get("lastname")
+    firstname = data.get("firstName")
+    lastname = data.get("lastName")
     password = data.get("password")
     role = data.get("role")
+
+    print(role)
 
     if db_session.query(models.Users).filter(models.Users.username == username).first():
         return jsonify(content={"status": "error", "message": "Username already taken"})
