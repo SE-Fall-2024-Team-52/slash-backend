@@ -35,7 +35,17 @@ BASE_URL = "http://localhost:5000"
 
 
 def schedule_price_drop_alert():
-    """Schedules price drop alerts for users."""
+    """
+        Schedules price drop alerts for all registered users.
+
+        This function queries all users from the database and sends a POST request 
+        to the price-drop-alert API endpoint with the user's username as payload.
+        The function is executed periodically using a scheduler.
+
+        Raises:
+            Exception: If an error occurs during the execution of the API call or database query.
+    """
+
     try:
         users = db_session.query(models.Users).all()
         for user in users:
@@ -57,11 +67,33 @@ atexit.register(lambda: scheduler.shutdown())
 
 @app.route("/")
 def index():
+    """
+        Default route to confirm the application and scheduler are running.
+
+        Returns:
+            str: A message indicating the scheduler is active.
+    """
+
     return "Scheduler is running!"
 
 
 @app.route("/postings/<username>", methods=["GET"])
 def get_postings(username):
+    """
+        Retrieves product postings created by a specific user.
+
+        This endpoint validates the given username, fetches the associated user 
+        from the database, and retrieves all product postings made by the user.
+
+        Args:
+            username (str): The username of the user whose postings are being retrieved.
+
+        Returns:
+            JSON: A response containing either:
+                - A success message with the list of postings.
+                - An error message if the user does not exist.
+    """
+
     validation1 = (
         db_session.query(models.Users).filter(models.Users.username == username).first()
     )
@@ -94,6 +126,16 @@ def get_postings(username):
 
 
 def extract_price(price_str):
+    """
+        Extracts the numeric price from a given price string.
+
+        Args:
+            price_str (str): The string containing the price.
+
+        Returns:
+            float: The numeric price if found, otherwise None.
+    """
+
     if not price_str[0].isdigit():
         prices = re.findall(r"\d+\.\d+", price_str)
         if prices:
@@ -105,6 +147,20 @@ def extract_price(price_str):
 
 @app.route("/api/search", methods=["GET"])
 def search_items_API():
+    """
+        API endpoint to search items across different platforms.
+
+        Query Parameters:
+            site (str): The site to search on ('walmart', 'ebay', 'bestbuy', 'target', or 'all').
+            item_name (str): The name of the item to search for (required).
+            min_price (float): Minimum price filter (default: 0).
+            max_price (float): Maximum price filter (default: 10000).
+            currency (str): Currency format (default: 'USD($)').
+
+        Returns:
+            Response: JSON response containing the filtered search results or error message.
+    """
+
     site = request.args.get("site", "all")
     item_name = request.args.get("item_name")
     min_price = float(request.args.get("min_price", 0))
@@ -154,6 +210,15 @@ def search_items_API():
     return jsonify(filtered_results)
 
 def get_product_postings(item_name: str) -> list[dict[str]]:
+    """
+        Retrieves product postings from the database for the given item name.
+
+        Args:
+            item_name (str): The name of the item to search for.
+
+        Returns:
+            list[dict]: A list of dictionaries containing product details.
+    """
 
     products = (
         db_session.query(models.ProductPostings)
@@ -175,7 +240,15 @@ def get_product_postings(item_name: str) -> list[dict[str]]:
     return data
 
 def scrape_walmart(item_name: str) -> list[dict]:
-    """Scrapes Walmart for item details."""
+    """
+        Scrapes Walmart's website for item details based on the search query.
+
+        Args:
+            item_name (str): The name of the item to search for.
+
+        Returns:
+            list[dict]: A list of dictionaries containing product details scraped from Walmart.
+    """
 
     url = f"https://www.walmart.com/search/?q={item_name}"
     headers = {
@@ -241,7 +314,17 @@ def scrape_target(item_name):
 
 
 def scrape_ebay(item_name):
-    """Scrapes eBay for item details."""
+    """
+        Scrapes eBay for item details.
+
+        Args:
+            item_name (str): The name of the item to search for on eBay.
+
+        Returns:
+            list[dict]: A list of dictionaries, each containing details about an item,
+                        such as title, price, link, image link, and the website.
+    """
+
     url = f"https://www.ebay.com/sch/i.html?_nkw={item_name}"
     response = requests.get(url)
     soup = BeautifulSoup(response.content, "html.parser")
@@ -294,7 +377,17 @@ def scrape_bestbuy(item_name):
 
 @app.route("/api/wishlist", methods=["POST"])
 def add_to_wishlist():
-    """Adds an item to the user's wishlist."""
+    """
+        Adds an item to the user's wishlist.
+
+        Expects a JSON payload containing:
+            - item (dict): Item details including 'title', 'link', 'website', 'price', 'img_link'.
+            - username (str): Username of the user.
+
+        Returns:
+            JSON response indicating success or failure.
+    """
+
     item = request.json.get("item")
     username = request.json.get("username")
     existing_item = (
@@ -331,7 +424,16 @@ def add_to_wishlist():
 
 @app.route("/api/wishlist/<product_id>", methods=["DELETE"])
 def remove_from_wishlist(product_id):
-    """Removes an item from the user's wishlist."""
+    """
+        Removes an item from the user's wishlist.
+
+        Args:
+            product_id (int): The ID of the wishlist item to be removed.
+
+        Returns:
+            JSON response indicating success or failure.
+    """
+
     existing_item = (
         db_session.query(models.Wishlist)
         .filter(models.Wishlist.id == product_id)
@@ -347,7 +449,16 @@ def remove_from_wishlist(product_id):
 
 @app.route("/api/wishlist/<username>", methods=["GET"])
 def get_wishlist(username):
-    """Fetches the user's wishlist."""
+    """
+        Fetches the user's wishlist.
+
+        Args:
+            username (str): The username of the user whose wishlist is to be retrieved.
+
+        Returns:
+            JSON response containing the list of wishlist items or an error message.
+    """
+
     user = (
         db_session.query(models.Users).filter(models.Users.username == username).first()
     )
@@ -381,7 +492,17 @@ def get_wishlist(username):
 
 @app.route("/api/cart", methods=["POST"])
 def add_to_cart():
-    """Adds an item to the user's cart."""
+    """
+        Adds an item to the user's cart.
+
+        Expects a JSON payload containing:
+            - item (dict): Item details including 'title', 'link', 'website', 'price', 'img_link'.
+            - username (str): Username of the user.
+
+        Returns:
+            JSON response indicating success or failure.
+    """
+
     item = request.json.get("item")
     username = request.json.get("username")
     existing_item = (
@@ -418,7 +539,18 @@ def add_to_cart():
 
 @app.route("/api/cart/<product_id>", methods=["DELETE"])
 def remove_from_cart(product_id):
-    """Removes an item from the user's cart."""
+    """
+        Removes an item from the user's cart.
+
+        Args:
+            product_id (str): The ID of the product to remove from the cart.
+
+        Returns:
+            JSON response:
+                - If the item is found and removed: {"message": "Item removed from cart successfully!"}, HTTP 200.
+                - If the item is not found: {"message": "Item not found in cart"}, HTTP 404.
+    """
+
     existing_item = (
         db_session.query(models.Cart).filter(models.Cart.id == product_id).first()
     )
@@ -432,7 +564,18 @@ def remove_from_cart(product_id):
 
 @app.route("/api/cart/<username>", methods=["GET"])
 def get_cart(username):
-    """Fetches the user's cart."""
+    """
+        Fetches the items in a user's cart.
+
+        Args:
+            username (str): The username of the user whose cart is being retrieved.
+
+        Returns:
+            JSON response:
+                - If the user exists: List of cart items, HTTP 200.
+                - If the user does not exist: {"message": "User not found"}, HTTP 404.
+    """
+
     user = (
         db_session.query(models.Users).filter(models.Users.username == username).first()
     )
@@ -464,7 +607,18 @@ def get_cart(username):
 
 @app.route("/api/place-order", methods=["POST"])
 def place_order():
-    """Places an order"""
+    """
+        Places an order for the specified items in the user's cart.
+
+        Request JSON:
+            - items (list): List of items (dict) with product IDs to order.
+            - username (str): The username of the user placing the order.
+
+        Returns:
+            JSON response:
+                - {"message": "Order placed successfully!"}, HTTP 200.
+    """
+
     items = request.json.get("items")
     username = request.json.get("username")
 
@@ -488,7 +642,17 @@ def place_order():
 
 @app.route("/api/get-orders/<username>", methods=["GET"])
 def get_order(username):
-    """Get orders"""
+    """
+        Retrieves all orders placed by a user.
+
+        Args:
+            username (str): The username of the user.
+
+        Returns:
+            JSON response:
+                - If the user exists: List of order details, HTTP 200.
+                - If the user does not exist: {"message": "User not found"}, HTTP 404.
+    """
 
     user = (
         db_session.query(models.Users).filter(models.Users.username == username).first()
@@ -521,7 +685,24 @@ def get_order(username):
 
 @app.route("/add-posting", methods=["POST"])
 def add_posting():
-    """Adds a product posting."""
+    """
+        Adds a new product posting by a user.
+
+        Request JSON:
+            - username (str): The username of the user posting the product.
+            - name (str): The name of the product.
+            - description (str): The description of the product.
+            - price (float): The price of the product.
+            - currency (str): The currency of the price.
+            - date_posted (str, optional): The date of posting (default: today).
+            - sold (bool, optional): Whether the product is sold (default: False).
+
+        Returns:
+            JSON response:
+                - If successful: {"status": "success"}.
+                - If the user does not exist: {"status": "error", "message": "User {username} does not exist"}.
+    """
+
     data = request.json
     username = data.get("username")
     user = (
@@ -549,7 +730,20 @@ def add_posting():
 
 
 def send_email(email, content):
-    """Sends an email for price drop alerts."""
+    """
+        Sends an email for price drop alerts.
+
+        Args:
+            email (str): The recipient's email address.
+            content (str): The content of the email.
+
+        Returns:
+            str: A success or error message indicating the result of the email sending operation.
+
+        Exceptions:
+            Exception: Catches and returns any error encountered during the email sending process.
+    """
+
     msg = Message("Price drop alert", recipients=[email])
     msg.body = content
     try:
@@ -562,7 +756,22 @@ def send_email(email, content):
 
 @app.route("/api/price-drop-alert", methods=["POST"])
 def send_price_drop_alert():
-    """Handles sending price drop alerts to users."""
+    """
+        Handles sending price drop alerts to users.
+
+        Reads the username from the JSON payload, retrieves the user's wishlist, and checks if there are any price drops
+        for the items being tracked. Sends an email notification to the user if applicable.
+
+        Request JSON:
+            - username (str): The username of the logged-in user.
+
+        Returns:
+            Response: A JSON response with a success message.
+
+        Exceptions:
+            Exception: Logs and propagates any issues in processing the alert.
+    """
+
     username = request.json.get("username")
     user = (
         db_session.query(models.Users).filter(models.Users.username == username).first()
@@ -600,7 +809,21 @@ def send_price_drop_alert():
 
 @app.route("/login", methods=["POST"])
 def login():
-    """Logs in a user."""
+    """
+        Logs in a user by validating their credentials.
+
+        Request JSON:
+            - username (str): The username of the user.
+            - password (str): The plaintext password of the user.
+
+        Returns:
+            Response: A JSON response containing the login status and user details if successful, 
+                    or an error message if the login fails.
+
+        Exceptions:
+            Exception: Handles missing or incorrect credentials during the login process.
+    """
+
     username = request.json.get("username")
     password = request.json.get("password")
 
@@ -630,7 +853,24 @@ def login():
 
 @app.route("/register", methods=["POST"])
 def register_user():
-    """Registers a new user."""
+    """
+        Registers a new user in the system.
+
+        Request JSON:
+            - username (str): The username for the new user.
+            - email (str): The email address for the new user.
+            - firstname (str): The first name of the user.
+            - lastname (str): The last name of the user.
+            - password (str): The plaintext password for the new user.
+            - role (str): The role assigned to the user (e.g., admin, customer).
+
+        Returns:
+            Response: A JSON response indicating the success or failure of the registration, along with user details if successful.
+
+        Exceptions:
+            Exception: Handles duplicate username or email errors.
+    """
+
     data = request.json
     username = data.get("username")
     email = data.get("email")
