@@ -5,8 +5,8 @@ from dotenv import load_dotenv
 import os
 
 # postgres connection
-username = os.getenv("DB_USERNAME")
-password = os.getenv("DB_PASSWORD")
+username = "saisameergutha"
+password = "Amalthea_Dune1"
 SQLALCHEMY_DATABASE_URL = (
     "postgresql://" + username + ":" + password + "@localhost/slash"
 )

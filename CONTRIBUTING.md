@@ -1,218 +1,161 @@
-# HELLO!! WELCOME TO CONTRIBUTING :)
+# Contributing Guidelines
 
-## Thanks for being here and taking your time to contribute. <br>
+First of all, thanks for thinking to contribute to our project❤️🎉
 
-The following is a set of guidelines for contributing to "Slash" and its packages, which are hosted in the [Slash-backend](https://github.com/SE-vrs-organization/slash-backend) on GitHub. These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request. <br>
+Below mentioned are the guidelines for contributing to the CSC 510 SE-Project-Recipe-Recommender and packages, which are hosted on our [Project Page](https://github.com/SE-Fall-2024-Team-52/slash-backend).
+Please ensure that these guidelines are followed and any new ideas are encouraged, feel free to propose changes in the form of a pull request.
 
-# Pull Request Process
+#### Table Of Contents
 
-1. Pass all the test cases that we have mentioned in the test.py.
-2. Update the README.md with the changes you have made.
-3. Add all the unnecessary build files have to the .gitignore file.
-4. Mention any new installatiuon dependencies in the requirements.txt file.
+[Code of Conduct](#code-of-conduct)
 
-# Committing Changes
+[Doubts Related to Github](#doubts-related-to-github)
 
-1. You need to start an issue on the project kanban board.
-2. You need to move this issue from to_do to in progress.
-3. Create a new branch and clone the repository.
-4. Change the branch of the code using git checkout.
-5. Make the required changes and commit everything to the newly created branch.
-6. Create a new pull request.
+ [I want to contribute to the project](#i-want-to-contribute-to-the-project)
 
-# Our Table Of Contents
+* [Reporting bugs](#reporting-bugs)
+* [Suggesting Significant Enhancements](#suggesting-significant-enhancements)
+* [Your First Code Contribution](#your-first-code-contribution)
+* [Pull Requests](#pull-requests)
+* [Improvent in Documentation](#improving-documentation)
+  
+ [Styleguides](#styleguides)
 
-- .github
-  workflows
-  all github workflow yaml files
-- docs
-  proj1rubrics.md
-- .gitignore
-
-- .travis.yml
-
-- CITATION.md
-
-- CODE_OF_CONDUCT.md
-- CONTRIBUTING.md
-
-- LICENSE
-
-- README.md
-
-- requirements.txt
-
-- setup.py
-
-- code
-  **init**.py
-
-- data
-  README.md
-
-- test
-  README.md
-  test.py
+* [Git Commit Messages](#git-commit-messages)
+* [Future Scope](#future-scope)
+* [Project Team](#project-team)
+* [Attribution](#attribution)
 
 ## Code of Conduct
 
-This project and everyone participating in it is governed by the [Code of Conduct](https://github.com/SE-vrs-organization/slash-backend/blob/main/CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to simlyclipse43@gmail.com.
+This project and everyone particpating in it is governed by [Code of Conduct](CODE-OF-CONDUCT.md).
+Everyone contributing to this project should uphold this and any inappropriate behaviour should be reported to <sguttha@ncsu.edu> or <skaonda@ncsu.edu> or <snandak3@ncsu.edu>.
 
-## How can I Contribute
+## Doubts Related to Github
 
-### Reporting Bugs
+Is it your first time contributing to a project? Don't worry as beginners we tend to get stressed about how things work, but guess what github has in
+depth documentation about everything you need to know, will be providing some useful links below.
 
-This section gives detailed information on how to report bugs. Reporting a bug will help the community and maintainers of the repository. <br>
-Before reporting any bug, make sure it is correct and you have all the details with you. Fot creating any bug report, please fill out [the required template](https://github.com/atom/.github/blob/master/.github/ISSUE_TEMPLATE/bug_report.md). This template will give us necessary information to help solve a bug faster.
+[Guidelines for Contributors](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/setting-guidelines-for-repository-contributors)
+
+[Encouraging Contributors](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/encouraging-helpful-contributions-to-your-project-with-labels)
+
+## I want to contribute to the project
+
+Before you decide to contribute to our project, you should have knowledge about bugs reports, suggesting enhancements, pull requests and documentation.
+
+### Reporting bugs
+
+This section will guide you regarding how to submit a bug report, details about how to submit a good bug report and
+things you need to check before submitting a report. Follow these guidelines to help the community understand your work💻 and contribute efficiently. Before
+creating the report, please check [this list](#before-submitting-a-bug-report) as you might find out that you don't need to create one. Still if you want to submit
+a bug report please include complete details about your environment, tools, packages, OS and different things which might be used to identify and resolve the issue.
+
+> **Note:** If you find a **Closed** issue that seems like it is the same thing that you're experiencing, open a new issue and include a link to the original issue in the body of your new one.
 
 #### Before Submitting A Bug Report
 
-The following is a list of items you need to check before submitting a bug report. <br>
+Before submitting, please ensure that your report contains all the required information , so that other sources are not required.
+Make sure you are using all the latest version software and the issue is not coming only on your local machine. Check if some other users also have faced a similar
+issue and is a resolution for it is available on the internet.
 
-[debugging guide](https://flight-manual.atom.io/hacking-atom/sections/debugging/). Check out this debugging guide, which helps you to find the cause of the problem and you may fix it by yourself manually. <br>
-[cursory search](https://github.com/search?q=+is%3Aissue+user%3Aatom) A cursory search is necessary to check if the reported bug is already mentioned before or not. You can add to the existing bug report if the issue is still open.
+#### How Do I Submit A (Good) Bug Report?
 
-#### To Submit A Good Bug Report
+[Github issues](https://docs.github.com/en/issues/tracking-your-work-with-issues/about-issues) helps in tracking the bugs and errors. Below mentioned are some
+of the things which makes a (Good) bug report.
 
-[GitHub issues](https://guides.github.com/features/issues/) You can track the bugs from this. For the repository that has bug, create an issue and fill out [the template](https://github.com/atom/.github/blob/master/.github/ISSUE_TEMPLATE/bug_report.md) to give details of the bug.
+* Explain the problem in detail so it is easy to identify the issue.
+* Describe how did you identify this issue and necessary steps to do so.
+* Include all the related screenshots, gifs, videos or anything that is required to demonstrate the issue.
+* Explain what is the actual behaviour and expected behaviour according to you.
+* Ensure that you check everything twice before submitting the bug report(like OS, latest version, local machine issues etc).
+* After a report is submitted a team member will review it and follow necessary steps to identify and resolve the issue.
 
-- To identify the problem, give the issue a clear and informative term. <br>
-- Describe in as much detail as possible to duplicate the problem. Explain the problem and explain about the exact command sused in the terminal which caus ethe bug to occur.
-- To demonstrate the steps, give specific examples. Include links to files or GitHub projects, or copy/pasteable snippets, which you use in those examples. If you're providing snippets in the issue, use [Markdown code blocks](https://help.github.com/articles/markdown-basics/#multiple-lines).
-- Specify what is the problem beavior and what you expected to see and why
-- If possible, include screenshots and animated GIFs that clearly demonstrate the problem. [this tool](https://www.cockos.com/licecap/)- to record GIFs on macOS and Windows, and [this tool](https://github.com/colinkeenan/silentcast) or [this tool](https://github.com/GNOME/byzanz) on Linux.
-- To include a crash report, add a stack trace from the operating system. For macOS, `Console.app` under "Diagnostic and usage information" > "User diagnostic reports" has crash report. Include the crash report in the issue in a [code block](https://help.github.com/articles/markdown-basics/#multiple-lines), a [file attachment](https://help.github.com/articles/file-attachments-on-issues-and-pull-requests/), or put it in a [gist](https://gist.github.com/) and provide link to that gist.
-- For performance or memory issues, include a [CPU profile capture](https://flight-manual.atom.io/hacking-atom/sections/debugging/#diagnose-runtime-performance) with your report.
+### Suggesting Significant Enhancements
 
-Provide more context by answering these questions: <br>
+This section will guide you regarding how to submit some minor or major enhancements for our Slash app. Follow these guidelines so that
+everyone could understand your work💻 and help in contributing more efficiently.
 
-- If the problem started happening recently then try downloading the old version of the packages and the code.
-- Include details about your configuration and environment.
-- What is the name and version of the OS you're using?
-- Are you running the project in a virtual environment?
-- Which packages have installed in your system? You can get a list of packages installed by running 'apm list --installed'
+#### Before Suggesting an Enhancement
 
-## Suggesting Enhancements
+* Check if there is already an package available(regarding to the enhancment you are suggesting).
+* Explain the steps for enhancing the project, along with the repository you want to enhance in.
 
-Any suggesting enhancements like adding new features or imporving existing functionalities, etc can done by following the below guidelines. They help maintainers understand your improvement. <br>
-[the template](https://github.com/atom/.github/blob/master/.github/ISSUE_TEMPLATE/feature_request.md)- this template is to be filled to add suggestions. These can include the steps that you imagine you would take if the feature you're requesting existed.
+#### How Do I Submit A (Good) Enhancement Suggestion?
 
-##### Before Submitting An Enhancement Suggestion
+[Github issues](https://docs.github.com/en/issues/tracking-your-work-with-issues/about-issues) helps in tracking the enhancement suggestions. Below mentioned are
+some of things you should keep in mind to submit a (Good) enhancement suggestion.
 
-[debugging guide](https://flight-manual.atom.io/hacking-atom/sections/debugging/). Check out this debugging guide, which helps you to find the cause of the problem and you may fix it by yourself manually. <br>
-[cursory search](https://github.com/search?q=+is%3Aissue+user%3Aatom) A cursory search is necessary to check if the reported bug is already mentioned before or not. You can add to the existing bug report if the issue is still open.
+* Explain clearly about the issue and required enhancement.
+* Describe what you feel is the actual and expected behaviour for the project.
+* Include all the related screenshots, gifs and code snippets, so that it helps everyone to understand about the issue.
+* Describe what are your system specifications and why this enhancement will be useful for every other user.
 
-#### To Submit A Good Enhancement Suggestion
+### Your First Code Contribution
 
-[GitHub issues](https://guides.github.com/features/issues/) You can track the bugs from this. For the repository that has bug, create an issue and fill out [the template](https://github.com/atom/.github/blob/master/.github/ISSUE_TEMPLATE/bug_report.md) to give details of the bug.
+Don't know about how to start contributing to CSC 510 SE-Project-Recipe-Recommender, you can look at begineer and help-wanted issues.
 
-- To identify the problem, give the issue a clear and informative term. <br>
-- Describe in as much detail as possible to duplicate the problem. Explain the problem and explain about the exact command sused in the terminal which caus ethe bug to occur.
-- To demonstrate the steps, give specific examples. Include links to files or GitHub projects, or copy/pasteable snippets, which you use in those examples. If you're providing snippets in the issue, use [Markdown code blocks](https://help.github.com/articles/markdown-basics/#multiple-lines).
-- Specify what is the problem beavior and what you expected to see and why
-- If possible, include screenshots and animated GIFs that clearly demonstrate the problem. [this tool](https://www.cockos.com/licecap/)- to record GIFs on macOS and Windows, and [this tool](https://github.com/colinkeenan/silentcast) or [this tool](https://github.com/GNOME/byzanz) on Linux.
-- To include a crash report, add a stack trace from the operating system. For macOS, `Console.app` under "Diagnostic and usage information" > "User diagnostic reports" has crash report. Include the crash report in the issue in a [code block](https://help.github.com/articles/markdown-basics/#multiple-lines), a [file attachment](https://help.github.com/articles/file-attachments-on-issues-and-pull-requests/), or put it in a [gist](https://gist.github.com/) and provide link to that gist.
-- For performance or memory issues, include a [CPU profile capture](https://flight-manual.atom.io/hacking-atom/sections/debugging/#diagnose-runtime-performance) with your report.
+[Begineer issues](https://github.com/search?utf8=✓&q=is%3Aopen+is%3Aissue+label%3Abeginner+label%3Ahelp-wanted+user%3Aatom+sort%3Acomments-desc) - issues which
+are just basic and require only few lines of code or minimal test cases.
 
-#### Start Your Contribution
+[Help Wanted Issues](https://github.com/search?q=is%3Aopen+is%3Aissue+label%3Ahelp-wanted+user%3Aatom+sort%3Acomments-desc+-label%3Abeginner) - issues which are
+a bit more complex and many people actually face them.
 
-`beginner` and `help-wanted` issues can help you getting started to contribute your first contribution:
+The above issues mentioned are sorted according to the number of comments, though the number of comments may not be the best parameter still as the number of comment
+increases we know that most of the people have faced similar issue, so it is a recurring issue.
+It will also demonstrate what impact the given change will have.
 
-- [Beginner issues][beginner] - issues which should only require a few lines of code, and a test or two.
-- [Help wanted issues][help-wanted] - issues which should be a bit more involved than `beginner` issues.
+### Pull Requests
 
-#### Local development
+This section will guide you regarding how you can send the pull requests and what the necessary things you need to follow.
 
-For developing the project, each section is done locally.
+* Project quality should be maintained.
+* Fix an issue which is global and not only coming in your local machine.
+* Don't suggest unnecessary changes which might not be useful to other users.
+* Maintain proper guidelines and ensure to follow necessary steps so everyone can understand and contribute to your work.
+* Try engaging the community with you contentful insights.
+* After you submit the pull request, check if all your status checks are passing, if they are failing please leave a comment on how you think the failure is unrelated.
+* Last but not the least, follow the [styleguides](#styleguides).
 
-- [Contributing to Calculator](https://github.com/SE-vrs-organization/slash-backend/blob/main/CONTRIBUTING.md)
+### Improving Documentation
 
-#### Pull Requests
-
-The goals to be considered are:
-
-- Focus of problems that are more valuable to users of the platform
-- Engage the community in working toward the best possible solution
-- To review contributions, enable a sustainable system for the maintainers
-
-Please follow these steps to have your contribution considered by the maintainers:
-
-1. Follow the [styleguides](#styleguides)
-2. Verify that all [status checks](https://help.github.com/articles/about-status-checks/) are passing once the pull request is submitted. <details><summary>What if the status checks are failing?</summary>If a status check is failing, and you believe that the failure is unrelated to your change, please leave a comment on the pull request explaining why you believe the failure is unrelated. A maintainer will re-run the status check for you. If we conclude that the failure was a false positive, then we will open an issue to track that problem with our status check suite.</details>
-
-While the prerequisites above must be satisfied prior to having your pull request reviewed, the reviewer(s) may ask you to complete additional design work, tests, or other changes before your pull request can be ultimately accepted.
+We would love to have suggestions regarding improving our documentation, if you feel anything is missing please feel free to reach out and suggest
+the changes.
 
 ## Styleguides
 
-#### Git Commit Messages
+### Git Commit Messages
 
-- Use the present tense ("Add feature" not "Added feature")
-- Use the imperative mood ("Move cursor to..." not "Moves cursor to...")
-- Limit the first line to 72 characters or less
-- Reference issues and pull requests liberally after the first line
-- When only changing documentation, include `[ci skip]` in the commit title
-- Consider starting the commit message with an applicable emoji:
+* Use proper commit messages so that everyone understands properly.
+* Address the issues and pull requests after first line.
+* When you are only changing the documentation, include `[ci skip]` in the commit title.
+* Use present tense in your commit messages.
+* Consider starting your commit message with different emojis(for various things):
+  * 📄 `:document:` when improving documentation
+  * 💻 `:laptop:` when improving the code structure
+  * 🍎 `:apple:` when fixing something in macOS
+  * 🐧 `:penguin:` when fixing something in linux
+  * 🪟 `:window:` when fixing something in windows
+  * 🚨 `:Red alert!:` when there any security issue
+  * ⬆️ `:up_arrow:` when upgrading dependencies
+  * ⬇️ `:down_arrow:` when downgrading dependencies
+  * ☑️ `:tickmark:` when adding tests
+  * 🪲 `:Bug:` when reporting or submitting a bug
+  * 📝 `:Memo:` when writing documents
 
-  - :art: `:art:` when improving the format/structure of the code
-  - :racehorse: `:racehorse:` when improving performance
-  - :non-potable_water: `:non-potable_water:` when plugging memory leaks
-  - :memo: `:memo:` when writing docs
-  - :penguin: `:penguin:` when fixing something on Linux
-  - :apple: `:apple:` when fixing something on macOS
-  - :checkered_flag: `:checkered_flag:` when fixing something on Windows
-  - :bug: `:bug:` when fixing a bug
-  - :fire: `:fire:` when removing code or files
-  - :green_heart: `:green_heart:` when fixing the CI build
-  - :white_check_mark: `:white_check_mark:` when adding tests
-  - :lock: `:lock:` when dealing with security
-  - :arrow_up: `:arrow_up:` when upgrading dependencies
-  - :arrow_down: `:arrow_down:` when downgrading dependencies
-  - :shirt: `:shirt:` when removing linter warnings
+### Future Scope
 
-  ```
+If you want to contribute and make an significant enhancement based on our project, you are free to do so. Always there are various possibilities available and it would make us very happy if any new research or idea is developed using our project.
 
+### Project team
 
-  #### CoffeeScript Styleguide
+The following are the team members who contributed and made this project.
 
-  ```
+1. [Sai Sameer Guttha](https://github.com/saisameer1998)
+2. [Swaraj Kaondal](https://github.com/SwarajKaondal)
+3. [Shourya Nanda Kumar](https://github.com/shouryank)
 
-- Set parameter defaults without spaces around the equal sign
-  - `clear = (count=1) ->` instead of `clear = (count = 1) ->`
-- Use spaces around operators
-  - `count + 1` instead of `count+1`
-- Use spaces after commas (unless separated by newlines)
-- Use parentheses if it improves code clarity.
-- Prefer alphabetic keywords to symbolic keywords:
-  - `a is b` instead of `a == b`
-- Avoid spaces inside the curly-braces of hash literals:
-  - `{a: 1, b: 2}` instead of `{ a: 1, b: 2 }`
-- Include a single line of whitespace between methods.
-- Capitalize initialisms and acronyms in names, except for the first word, which
-  should be lower-case:
-  - `getURI` instead of `getUri`
-  - `uriToOpen` instead of `URIToOpen`
-- Use `slice()` to copy an array
-- Add an explicit `return` when your function ends with a `for`/`while` loop and
-  you don't want it to return a collected array.
-- Use `this` instead of a standalone `@`
-  - `return this` instead of `return @`
-- Place requires in the following order:
-  - Built in Node Modules (such as `path`)
-  - Local Modules (using relative paths)
-- Place class properties in the following order:
-  - Class methods and properties (methods starting with a `@`)
-  - Instance methods and properties
+### Attribution
 
-#### Documentation Styleguide
-
-- Use [Markdown](https://daringfireball.net/projects/markdown).
-- Reference methods and classes in markdown with the custom `{}` notation:
-  - Reference classes with `{ClassName}`
-  - Reference instance methods with `{ClassName::methodName}`
-  - Reference class methods with `{ClassName.methodName}`
-
-# Attribution
-
-Code of Conduct was adapted from [Contributor Covenant][homepage],
-version 2.0, available at
-https://www.contributor-covenant.org/version/2/0/code_of_conduct.html.
+The contribution file is based on atom(repository). Please check it out as it gives in-depth explanation of everything you need to include in your github
+repository, if you have read till this point congrats you have a lot of patience, happy coding.
