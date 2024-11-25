@@ -93,7 +93,7 @@ some of things you should keep in mind to submit a (Good) enhancement suggestion
 
 ### Your First Code Contribution
 
-Don't know about how to start contributing to CSC 510 SE-Project-Recipe-Recommender, you can look at begineer and help-wanted issues.
+Don't know about how to start contributing to Slash, you can look at begineer and help-wanted issues.
 
 [Begineer issues](https://github.com/search?utf8=✓&q=is%3Aopen+is%3Aissue+label%3Abeginner+label%3Ahelp-wanted+user%3Aatom+sort%3Acomments-desc) - issues which
 are just basic and require only few lines of code or minimal test cases.
